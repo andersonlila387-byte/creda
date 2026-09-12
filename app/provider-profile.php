@@ -104,7 +104,7 @@ require_once __DIR__ . '/components/head.php';
     <?php include __DIR__ . '/components/header.php'; ?>
 
     <!-- Scrollable Profile Content -->
-    <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 md:pb-8 lg:pb-12 scroll-smooth">
+    <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-36 sm:pb-32 md:pb-10 lg:pb-12 scroll-smooth">
         
         <div class="max-w-7xl mx-auto space-y-6">
 
@@ -132,7 +132,7 @@ require_once __DIR__ . '/components/head.php';
                 <div class="h-1.5 w-full bg-[#1952E1]"></div>
 
                 <!-- Inner Content Area -->
-                <div class="p-6 sm:p-8 space-y-6">
+                <div class="p-5 sm:p-8 space-y-6">
                     
                     <!-- Identity & Action Cluster Row -->
                     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -140,23 +140,23 @@ require_once __DIR__ . '/components/head.php';
                         <!-- Left: Avatar & Bio Headline -->
                         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                             
-                            <!-- Square Rounded Avatar with Brand Ring -->
-                            <div class="relative shrink-0">
-                                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-[3px] border border-slate-200 p-0.5 bg-white shadow-xs">
+                            <!-- Bigger Fully Rounded Avatar with Verified Ring -->
+                            <div class="relative shrink-0 mx-auto sm:mx-0">
+                                <div class="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full border-2 border-slate-200/90 p-1 bg-white shadow-sm overflow-hidden flex items-center justify-center">
                                     <img 
                                         src="<?= htmlspecialchars($avatar_url) ?>" 
                                         alt="<?= $provider_name ?>" 
-                                        class="w-full h-full rounded-[2px] object-cover bg-slate-100"
+                                        class="w-full h-full rounded-full object-cover bg-slate-100"
                                     >
                                 </div>
-                                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-[#1952E1] rounded-full ring-2 ring-white flex items-center justify-center" title="Verified Available">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                <span class="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 bg-[#1952E1] rounded-full ring-2 ring-white flex items-center justify-center shadow-xs" title="Verified Available">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white"></span>
                                 </span>
                             </div>
 
                             <!-- Typography & Meta -->
-                            <div class="space-y-1">
-                                <div class="flex items-center gap-2 flex-wrap">
+                            <div class="space-y-1.5 text-center sm:text-left">
+                                <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
                                     <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                                         <?= $provider_name ?>
                                     </h1>
@@ -173,7 +173,7 @@ require_once __DIR__ . '/components/head.php';
                                     <?= $provider_title ?>
                                 </p>
 
-                                <div class="flex items-center gap-3 text-xs text-slate-500 flex-wrap pt-0.5 font-medium">
+                                <div class="flex items-center justify-center sm:justify-start gap-3 text-xs text-slate-500 flex-wrap pt-0.5 font-medium">
                                     <span class="flex items-center gap-1 text-slate-600">
                                         <i class="ph-bold ph-at text-slate-400"></i>
                                         <span><?= $provider_handle ?></span>
@@ -195,23 +195,23 @@ require_once __DIR__ . '/components/head.php';
 
                         </div>
 
-                        <!-- Right: Action Button Cluster -->
-                        <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
+                        <!-- Right: Action Button Cluster (Responsive Grid on Mobile) -->
+                        <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 w-full lg:w-auto shrink-0 pt-2 lg:pt-0">
                             
                             <!-- Share / Copy Link -->
                             <button 
                                 onclick="copyProfileLink()" 
-                                class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 text-xs font-bold rounded-[3px] transition-colors border border-slate-200 cursor-pointer shadow-2xs"
+                                class="col-span-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 text-xs font-bold rounded-[3px] transition-colors border border-slate-200 cursor-pointer shadow-2xs"
                                 title="Share Profile Link"
                             >
                                 <i class="ph-bold ph-share-network text-sm"></i>
-                                <span class="hidden sm:inline">Share</span>
+                                <span>Share</span>
                             </button>
 
                             <!-- Message Chat -->
                             <a 
                                 href="messages.php?user=<?= urlencode($provider['user_id']) ?>" 
-                                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded-[3px] transition-colors border border-slate-300 shadow-2xs"
+                                class="col-span-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded-[3px] transition-colors border border-slate-300 shadow-2xs"
                             >
                                 <i class="ph-bold ph-chat-circle-dots text-sm text-[#1952E1]"></i>
                                 <span>Message</span>
@@ -220,7 +220,7 @@ require_once __DIR__ . '/components/head.php';
                             <!-- Primary Hire Button -->
                             <a 
                                 href="post-project.php?provider_id=<?= $provider['user_id'] ?>" 
-                                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-black rounded-[3px] transition-all shadow-md shadow-blue-600/20 group"
+                                class="col-span-2 sm:col-span-1 inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-black rounded-[3px] transition-all shadow-md shadow-blue-600/20 group"
                             >
                                 <i class="ph-bold ph-handshake text-sm group-hover:scale-110 transition-transform"></i>
                                 <span>Hire Specialist</span>
@@ -288,18 +288,20 @@ require_once __DIR__ . '/components/head.php';
                 <div class="lg:col-span-8 space-y-6 min-w-0">
 
                     <!-- Bento Tile 1: Executive Summary & Bio -->
-                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-5">
+                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-5 sm:p-6 shadow-sm space-y-5">
                         
                         <!-- Header -->
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                            <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 border-b border-slate-100 pb-4">
+                            <div class="min-w-0">
                                 <h2 class="text-base font-bold text-slate-900">Professional Overview</h2>
                                 <p class="text-xs text-slate-500">Verified Technical Qualifications & Scope</p>
                             </div>
-                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-[3px] border border-slate-200">
-                                <i class="ph-bold ph-shield-check text-[#1952E1]"></i>
-                                <span>Vetted Talent</span>
-                            </span>
+                            <div class="self-start sm:self-auto shrink-0">
+                                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-[3px] border border-slate-200">
+                                    <i class="ph-bold ph-shield-check text-[#1952E1]"></i>
+                                    <span>Vetted Talent</span>
+                                </span>
+                            </div>
                         </div>
 
                         <!-- Highlight Value Callout -->
@@ -350,29 +352,31 @@ require_once __DIR__ . '/components/head.php';
 
                         <!-- Academic Credential (if present) -->
                         <?php if (!empty($provider['institution'])): ?>
-                            <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-[3px] flex items-center justify-between text-xs">
-                                <div class="flex items-center gap-2 text-slate-700">
-                                    <i class="ph-bold ph-graduation-cap text-[#1952E1] text-base"></i>
-                                    <span>Academic Record: <strong class="text-slate-900"><?= htmlspecialchars($provider['institution']) ?></strong> <?= !empty($provider['department']) ? '• ' . htmlspecialchars($provider['department']) : '' ?></span>
+                            <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-[3px] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                                <div class="flex items-center gap-2 text-slate-700 min-w-0">
+                                    <i class="ph-bold ph-graduation-cap text-[#1952E1] text-base shrink-0"></i>
+                                    <span class="truncate">Academic Record: <strong class="text-slate-900"><?= htmlspecialchars($provider['institution']) ?></strong> <?= !empty($provider['department']) ? '• ' . htmlspecialchars($provider['department']) : '' ?></span>
                                 </div>
-                                <span class="text-[10px] font-bold text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80">Verified</span>
+                                <span class="text-[10px] font-bold text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80 self-start sm:self-auto shrink-0">Verified</span>
                             </div>
                         <?php endif; ?>
 
                     </div>
 
                     <!-- Bento Tile 2: Skills & Technical Arsenal -->
-                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-4">
+                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-5 sm:p-6 shadow-sm space-y-4">
                         
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 border-b border-slate-100 pb-3">
+                            <div class="min-w-0">
                                 <h2 class="text-base font-bold text-slate-900">Skills & Specializations</h2>
                                 <p class="text-xs text-slate-500">Validated through Creda technical benchmarking</p>
                             </div>
-                            <span class="inline-flex items-center gap-1 text-xs font-bold text-[#1952E1] bg-blue-50 px-2.5 py-1 rounded-[3px] border border-blue-200/70">
-                                <i class="ph-bold ph-check-circle"></i>
-                                <span>Score: <?= $assessment_score ?>% (Passed)</span>
-                            </span>
+                            <div class="self-start sm:self-auto shrink-0">
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-[#1952E1] bg-blue-50 px-2.5 py-1 rounded-[3px] border border-blue-200/70">
+                                    <i class="ph-bold ph-check-circle"></i>
+                                    <span>Score: <?= $assessment_score ?>% (Passed)</span>
+                                </span>
+                            </div>
                         </div>
 
                         <!-- Clean Monochromatic Skill Tags -->
@@ -386,22 +390,24 @@ require_once __DIR__ . '/components/head.php';
                         </div>
 
                         <!-- Footnote -->
-                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                        <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500">
                             <span>Evaluated for structural code quality, architecture standards, and reliability.</span>
-                            <span class="font-bold text-slate-700"><?= count($skills_list) ?> Skills Verified</span>
+                            <span class="font-bold text-slate-700 shrink-0"><?= count($skills_list) ?> Skills Verified</span>
                         </div>
 
                     </div>
 
                     <!-- Bento Tile 3: Service Packages & Deliverables -->
-                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-5">
+                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-5 sm:p-6 shadow-sm space-y-5">
                         
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 border-b border-slate-100 pb-3">
+                            <div class="min-w-0">
                                 <h2 class="text-base font-bold text-slate-900">Service Packages</h2>
                                 <p class="text-xs text-slate-500">Fixed-deliverable scopes protected by escrow milestone release</p>
                             </div>
-                            <span class="text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-[3px]"><?= count($packages) ?> Packages</span>
+                            <div class="self-start sm:self-auto shrink-0">
+                                <span class="text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-[3px]"><?= count($packages) ?> Packages</span>
+                            </div>
                         </div>
 
                         <?php if (empty($packages)): ?>
@@ -486,15 +492,15 @@ require_once __DIR__ . '/components/head.php';
                     </div>
 
                     <!-- Bento Tile 4: Verified Milestone Feedback -->
-                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-5">
+                    <div class="bg-white border border-slate-200/90 rounded-[3px] p-5 sm:p-6 shadow-sm space-y-5">
                         
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 border-b border-slate-100 pb-3">
+                            <div class="min-w-0">
                                 <h2 class="text-base font-bold text-slate-900">Verified Client Feedback</h2>
                                 <p class="text-xs text-slate-500">Tied directly to completed escrow payments</p>
                             </div>
-                            <div class="flex items-center gap-1 font-bold text-xs text-slate-900">
-                                <span>★ <?= $provider_rating ?></span>
+                            <div class="flex items-center gap-1.5 font-bold text-xs text-slate-900 self-start sm:self-auto shrink-0">
+                                <span class="text-[#1952E1] font-black">★ <?= $provider_rating ?></span>
                                 <span class="text-slate-400 font-normal text-[11px]">(<?= $provider_reviews_count ?> Reviews)</span>
                             </div>
                         </div>
@@ -504,32 +510,32 @@ require_once __DIR__ . '/components/head.php';
                             
                             <!-- Review Card 1 -->
                             <div class="pt-3 first:pt-0 space-y-2.5">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center">
+                                <div class="flex items-start justify-between gap-2.5">
+                                    <div class="flex items-center gap-2.5 min-w-0">
+                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center shrink-0">
                                             DO
                                         </div>
-                                        <div>
-                                            <div class="flex items-center gap-2">
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-2 flex-wrap">
                                                 <span class="font-bold text-xs text-slate-900">David Olanrewaju</span>
-                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80">
+                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80 shrink-0">
                                                     <i class="ph-fill ph-check-circle text-xs text-[#1952E1]"></i>
                                                     <span>Verified Escrow Hire</span>
                                                 </span>
                                             </div>
-                                            <span class="text-[10px] text-slate-400">Chief Technology Officer • FinTech Project</span>
+                                            <span class="text-[10px] text-slate-400 block truncate">Chief Technology Officer • FinTech Project</span>
                                         </div>
                                     </div>
-                                    <div class="text-slate-900 text-xs font-black">
+                                    <div class="text-slate-900 text-xs font-black shrink-0">
                                         5.0 <span class="text-slate-400 font-normal">/ 5.0</span>
                                     </div>
                                 </div>
 
-                                <p class="text-xs text-slate-600 leading-relaxed pl-10">
+                                <p class="text-xs text-slate-600 leading-relaxed pl-0 sm:pl-10">
                                     "Exceptional communication, clean architectural patterns, and adherence to milestones. The database queries and backend APIs were thoroughly documented and delivered 2 days ahead of schedule. We will definitely rehire for subsequent milestones."
                                 </p>
 
-                                <div class="flex items-center justify-between text-[10px] text-slate-400 pl-10 pt-1">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] text-slate-400 pl-0 sm:pl-10 pt-1">
                                     <span class="font-medium text-slate-600">Contract: <strong class="text-slate-800">₦180,000 Milestone Payout</strong></span>
                                     <span>Completed 2 weeks ago</span>
                                 </div>
@@ -537,32 +543,32 @@ require_once __DIR__ . '/components/head.php';
 
                             <!-- Review Card 2 -->
                             <div class="pt-4 space-y-2.5">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center">
+                                <div class="flex items-start justify-between gap-2.5">
+                                    <div class="flex items-center gap-2.5 min-w-0">
+                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center shrink-0">
                                             TF
                                         </div>
-                                        <div>
-                                            <div class="flex items-center gap-2">
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-2 flex-wrap">
                                                 <span class="font-bold text-xs text-slate-900">Tolulope F.</span>
-                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80">
+                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80 shrink-0">
                                                     <i class="ph-fill ph-check-circle text-xs text-[#1952E1]"></i>
                                                     <span>Verified Escrow Hire</span>
                                                 </span>
                                             </div>
-                                            <span class="text-[10px] text-slate-400">Founder & Product Lead</span>
+                                            <span class="text-[10px] text-slate-400 block truncate">Founder & Product Lead</span>
                                         </div>
                                     </div>
-                                    <div class="text-slate-900 text-xs font-black">
+                                    <div class="text-slate-900 text-xs font-black shrink-0">
                                         5.0 <span class="text-slate-400 font-normal">/ 5.0</span>
                                     </div>
                                 </div>
 
-                                <p class="text-xs text-slate-600 leading-relaxed pl-10">
+                                <p class="text-xs text-slate-600 leading-relaxed pl-0 sm:pl-10">
                                     "Super sharp technical execution. Implemented our webhook handlers and payment processing gateway with zero bugs. Revisions were incorporated within a few hours."
                                 </p>
 
-                                <div class="flex items-center justify-between text-[10px] text-slate-400 pl-10 pt-1">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] text-slate-400 pl-0 sm:pl-10 pt-1">
                                     <span class="font-medium text-slate-600">Contract: <strong class="text-slate-800">₦95,000 Milestone Payout</strong></span>
                                     <span>Completed 1 month ago</span>
                                 </div>
@@ -591,11 +597,11 @@ require_once __DIR__ . '/components/head.php';
                     <div class="bg-white border-2 border-[#1952E1] rounded-[3px] p-5 sm:p-6 shadow-sm space-y-5 relative overflow-hidden">
                         
                         <!-- Top Header Strip -->
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80">
+                        <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80 shrink-0">
                                 Direct Engagement
                             </span>
-                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-700 bg-slate-50 px-2 py-0.5 rounded-[3px] border border-slate-200">
+                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-700 bg-slate-50 px-2 py-0.5 rounded-[3px] border border-slate-200 shrink-0">
                                 <span class="w-1.5 h-1.5 rounded-full bg-[#1952E1]"></span>
                                 <span>Accepting Contracts</span>
                             </span>
@@ -677,11 +683,11 @@ require_once __DIR__ . '/components/head.php';
                         
                         <!-- Header & Gauge -->
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div class="flex items-center gap-2">
-                                <i class="ph-bold ph-seal-check text-lg text-[#1952E1]"></i>
-                                <h3 class="text-sm font-bold text-slate-900">Creda Trust Score</h3>
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i class="ph-bold ph-seal-check text-lg text-[#1952E1] shrink-0"></i>
+                                <h3 class="text-sm font-bold text-slate-900 truncate">Creda Trust Score</h3>
                             </div>
-                            <span class="text-xs font-black text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80">
+                            <span class="text-xs font-black text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80 shrink-0">
                                 98 / 100
                             </span>
                         </div>
@@ -699,42 +705,42 @@ require_once __DIR__ . '/components/head.php';
 
                         <!-- Verification Checklist -->
                         <div class="space-y-3 pt-2 text-xs">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2 text-slate-700">
-                                    <i class="ph-bold ph-identification-card text-slate-400 text-base"></i>
-                                    <span>Government ID / NIN</span>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 text-slate-700 min-w-0">
+                                    <i class="ph-bold ph-identification-card text-slate-400 text-base shrink-0"></i>
+                                    <span class="truncate">Government ID / NIN</span>
                                 </div>
-                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px]">
+                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px] shrink-0">
                                     <i class="ph-bold ph-check"></i> Verified
                                 </span>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2 text-slate-700">
-                                    <i class="ph-bold ph-exam text-slate-400 text-base"></i>
-                                    <span>Technical Assessment</span>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 text-slate-700 min-w-0">
+                                    <i class="ph-bold ph-exam text-slate-400 text-base shrink-0"></i>
+                                    <span class="truncate">Technical Assessment</span>
                                 </div>
-                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px]">
+                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px] shrink-0">
                                     <?= $assessment_score ?>% (Passed)
                                 </span>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2 text-slate-700">
-                                    <i class="ph-bold ph-phone text-slate-400 text-base"></i>
-                                    <span>Phone & Email Verified</span>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 text-slate-700 min-w-0">
+                                    <i class="ph-bold ph-phone text-slate-400 text-base shrink-0"></i>
+                                    <span class="truncate">Phone & Email Verified</span>
                                 </div>
-                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px]">
+                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px] shrink-0">
                                     <i class="ph-bold ph-check"></i> Verified
                                 </span>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2 text-slate-700">
-                                    <i class="ph-bold ph-shield-check text-slate-400 text-base"></i>
-                                    <span>Escrow Guarantee Bond</span>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 text-slate-700 min-w-0">
+                                    <i class="ph-bold ph-shield-check text-slate-400 text-base shrink-0"></i>
+                                    <span class="truncate">Escrow Guarantee Bond</span>
                                 </div>
-                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px]">
+                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px] shrink-0">
                                     <i class="ph-bold ph-check"></i> Bonded
                                 </span>
                             </div>
@@ -746,37 +752,37 @@ require_once __DIR__ . '/components/head.php';
                     <div class="bg-white border border-slate-200/90 rounded-[3px] p-5 sm:p-6 shadow-sm space-y-4">
                         
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div class="flex items-center gap-2">
-                                <i class="ph-bold ph-gauge text-lg text-[#1952E1]"></i>
-                                <h3 class="text-sm font-bold text-slate-900">Operational Metrics</h3>
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i class="ph-bold ph-gauge text-lg text-[#1952E1] shrink-0"></i>
+                                <h3 class="text-sm font-bold text-slate-900 truncate">Operational Metrics</h3>
                             </div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Live Standards</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase shrink-0">Live Standards</span>
                         </div>
 
                         <div class="space-y-3 text-xs">
-                            <div class="flex items-center justify-between">
-                                <span class="text-slate-500">On-Time Milestone Delivery:</span>
-                                <strong class="text-slate-900">100%</strong>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-slate-500 min-w-0">On-Time Milestone Delivery:</span>
+                                <strong class="text-slate-900 shrink-0 text-right">100%</strong>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <span class="text-slate-500">Average Response Time:</span>
-                                <strong class="text-[#1952E1]">&lt; 30 Mins</strong>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-slate-500 min-w-0">Average Response Time:</span>
+                                <strong class="text-[#1952E1] shrink-0 text-right">&lt; 30 Mins</strong>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <span class="text-slate-500">Typical Turnaround:</span>
-                                <strong class="text-slate-900"><?= $provider_turnaround ?></strong>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-slate-500 min-w-0">Typical Turnaround:</span>
+                                <strong class="text-slate-900 shrink-0 text-right"><?= $provider_turnaround ?></strong>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <span class="text-slate-500">Repeat Client Ratio:</span>
-                                <strong class="text-slate-900">88%</strong>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-slate-500 min-w-0">Repeat Client Ratio:</span>
+                                <strong class="text-slate-900 shrink-0 text-right">88%</strong>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <span class="text-slate-500">Language Fluency:</span>
-                                <strong class="text-slate-900">English (Fluent)</strong>
+                            <div class="flex items-center justify-between gap-3">
+                                <span class="text-slate-500 min-w-0">Language Fluency:</span>
+                                <strong class="text-slate-900 shrink-0 text-right">English (Fluent)</strong>
                             </div>
                         </div>
 
@@ -797,13 +803,15 @@ require_once __DIR__ . '/components/head.php';
 
             </div>
 
+            <!-- Extra Bottom Spacing for Mobile Bottom Dock Navbar Clearance -->
+            <div class="h-16 md:hidden w-full" aria-hidden="true"></div>
+
         </div>
 
     </div>
 
 </main>
 
-<?php include __DIR__ . '/components/bottom-nav.php'; ?>
 <?php include __DIR__ . '/components/footer.php'; ?>
 
 <!-- Client Profile Interactivity Script -->
