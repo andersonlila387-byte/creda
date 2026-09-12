@@ -1,0 +1,33 @@
+RewriteEngine On
+RewriteBase /creda/
+
+# 1. Scrambled Route Token Routing & Direct .php Interception
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{REQUEST_URI} !dispatcher\.php
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+creda/app/([^/?\s]+)\.php [NC]
+RewriteRule ^app/(?!dispatcher\.php$)([^/]+)\.php$ /creda/app/dispatcher.php?__direct_block=$1 [L,QSA]
+
+# 2. Route root /app/ to dispatcher (redirects to scrambled dashboard token)
+RewriteRule ^app/?$ /creda/app/dispatcher.php [L,QSA]
+
+# 3. Route scrambled alphanumeric tokens under /app/<token>
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^app/([a-zA-Z0-9_-]{20,})/?$ /creda/app/dispatcher.php?__token=$1 [L,QSA]
+
+# Rewrite app/messages/user/david-olanrewaju to app/messages.php?user=david-olanrewaju
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^app/messages/user/([^/]+)/?$ app/messages.php?user=$1 [L,QSA]
+
+# Rewrite app/talent/user/david-olanrewaju to app/talent.php?user=david-olanrewaju
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^app/talent/user/([^/]+)/?$ app/talent.php?user=$1 [L,QSA]
+
+# Clean URL Routing for extensionless PHP files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*?)/?$ $1.php [L,QSA]
+

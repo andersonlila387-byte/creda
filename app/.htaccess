@@ -1,0 +1,16 @@
+RewriteEngine On
+RewriteBase /creda/app/
+
+# 1. Intercept direct requests to raw .php files (except dispatcher.php)
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{REQUEST_URI} !dispatcher\.php
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+creda/app/([^/?\s]+)\.php [NC]
+RewriteRule ^(?!dispatcher\.php$)([^/]+)\.php$ /creda/app/dispatcher.php?__direct_block=$1 [L,QSA]
+
+# 2. Dispatch root /app/ access
+RewriteRule ^$ /creda/app/dispatcher.php [L,QSA]
+
+# 3. Route scrambled alphanumeric route tokens (20+ chars)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9_-]{20,})/?$ /creda/app/dispatcher.php?__token=$1 [L,QSA]

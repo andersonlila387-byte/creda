@@ -1,0 +1,316 @@
+/* ==========================================================================
+   Scriptly Custom Toast & SweetAlert Design System
+   Matches Brand Palette: #0A2342 (Navy), #ffda79 (Gold), Tailwind Stack
+   ========================================================================== */
+
+/* Toast Container */
+#scriptly-toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 380px;
+    width: calc(100% - 40px);
+    pointer-events: none;
+}
+
+@media (max-width: 640px) {
+    #scriptly-toast-container {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: 100%;
+        width: auto;
+    }
+}
+
+/* Individual Toast Item */
+.scriptly-toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 30px -5px rgba(10, 35, 66, 0.15), 0 0 1px 1px rgba(10, 35, 66, 0.05);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    position: relative;
+    overflow: hidden;
+    transform: translateX(110%);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.scriptly-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.scriptly-toast.hide {
+    transform: translateX(110%);
+    opacity: 0;
+}
+
+/* Toast Icon Wrapper */
+.scriptly-toast-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.scriptly-toast-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Toast Variants */
+.scriptly-toast-success .scriptly-toast-icon {
+    background: #ecfdf5;
+    color: #059669;
+}
+.scriptly-toast-success {
+    border-left: 4px solid #10b981;
+}
+
+.scriptly-toast-error .scriptly-toast-icon {
+    background: #fff1f2;
+    color: #e11d48;
+}
+.scriptly-toast-error {
+    border-left: 4px solid #f43f5e;
+}
+
+.scriptly-toast-warning .scriptly-toast-icon {
+    background: #fffbeb;
+    color: #d97706;
+}
+.scriptly-toast-warning {
+    border-left: 4px solid #f59e0b;
+}
+
+.scriptly-toast-info .scriptly-toast-icon {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.scriptly-toast-info {
+    border-left: 4px solid #0A2342;
+}
+
+/* Toast Content */
+.scriptly-toast-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.scriptly-toast-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0A2342;
+    margin: 0 0 2px 0;
+    line-height: 1.3;
+}
+
+.scriptly-toast-message {
+    font-size: 12px;
+    font-weight: 500;
+    color: #475569;
+    margin: 0;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* Toast Close Button */
+.scriptly-toast-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: #94a3b8;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background 0.15s ease;
+    margin-left: 4px;
+    flex-shrink: 0;
+}
+
+.scriptly-toast-close:hover {
+    color: #0A2342;
+    background: #f1f5f9;
+}
+
+.scriptly-toast-close svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Toast Progress Bar */
+.scriptly-toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: rgba(10, 35, 66, 0.08);
+}
+
+.scriptly-toast-progress-bar {
+    height: 100%;
+    width: 100%;
+    transform-origin: left;
+}
+
+.scriptly-toast-success .scriptly-toast-progress-bar { background: #10b981; }
+.scriptly-toast-error .scriptly-toast-progress-bar { background: #f43f5e; }
+.scriptly-toast-warning .scriptly-toast-progress-bar { background: #f59e0b; }
+.scriptly-toast-info .scriptly-toast-progress-bar { background: #0A2342; }
+
+/* ==========================================================================
+   Scriptly Custom SweetAlert Modal Dialog
+   ========================================================================== */
+#scriptly-alert-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 35, 66, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#scriptly-alert-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scriptly-alert-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(10, 35, 66, 0.35);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    max-width: 440px;
+    width: 100%;
+    padding: 28px 24px 22px;
+    text-align: center;
+    transform: scale(0.92) translateY(10px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#scriptly-alert-overlay.show .scriptly-alert-card {
+    transform: scale(1) translateY(0);
+}
+
+.scriptly-alert-badge {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.scriptly-alert-badge svg {
+    width: 28px;
+    height: 28px;
+}
+
+.scriptly-alert-badge.success {
+    background: #ecfdf5;
+    color: #059669;
+    border: 2px solid #a7f3d0;
+}
+
+.scriptly-alert-badge.error {
+    background: #fff1f2;
+    color: #e11d48;
+    border: 2px solid #fecdd3;
+}
+
+.scriptly-alert-badge.warning {
+    background: #fffbeb;
+    color: #d97706;
+    border: 2px solid #fde68a;
+}
+
+.scriptly-alert-badge.info {
+    background: #eff6ff;
+    color: #0A2342;
+    border: 2px solid #bfdbfe;
+}
+
+.scriptly-alert-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0A2342;
+    margin: 0 0 8px 0;
+    line-height: 1.25;
+}
+
+.scriptly-alert-text {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+    font-weight: 500;
+}
+
+.scriptly-alert-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.scriptly-alert-btn {
+    padding: 10px 22px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+    outline: none;
+    font-family: inherit;
+}
+
+.scriptly-alert-btn-confirm {
+    background: #0A2342;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(10, 35, 66, 0.2);
+}
+
+.scriptly-alert-btn-confirm:hover {
+    background: #1e3a5f;
+    transform: translateY(-1px);
+}
+
+.scriptly-alert-btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.scriptly-alert-btn-cancel:hover {
+    background: #e2e8f0;
+    color: #0A2342;
+}
