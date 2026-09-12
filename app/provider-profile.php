@@ -280,12 +280,12 @@ require_once __DIR__ . '/components/head.php';
             <!-- ====================================================================== -->
             <!-- 2. TWO-COLUMN BENTO SPLIT: 65% LEFT / 35% RIGHT                        -->
             <!-- ====================================================================== -->
-            <div class="flex flex-col lg:flex-row gap-6 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
                 
                 <!-- ================================================================== -->
                 <!-- LEFT COLUMN: 65% WIDTH (EXECUTIVE BIO, TECH MATRIX, PACKAGES)      -->
                 <!-- ================================================================== -->
-                <div class="w-full lg:w-[65%] space-y-6">
+                <div class="lg:col-span-8 space-y-6 min-w-0">
 
                     <!-- Bento Tile 1: Executive Summary & Bio -->
                     <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-5">
@@ -585,7 +585,7 @@ require_once __DIR__ . '/components/head.php';
                 <!-- ================================================================== -->
                 <!-- RIGHT COLUMN: 35% WIDTH (ESCROW DIRECT HIRE & CREDENTIALS SIDEBAR) -->
                 <!-- ================================================================== -->
-                <div class="w-full lg:w-[35%] space-y-6 shrink-0 lg:sticky lg:top-4">
+                <div class="lg:col-span-4 space-y-6 min-w-0 lg:sticky lg:top-4">
 
                     <!-- Bento Sidebar 1: Direct Hire & Escrow Contract Estimator -->
                     <div class="bg-white border-2 border-[#1952E1] rounded-[3px] p-5 sm:p-6 shadow-sm space-y-5 relative overflow-hidden">
@@ -689,7 +689,7 @@ require_once __DIR__ . '/components/head.php';
                         <!-- Progress Bar Visual -->
                         <div class="space-y-1">
                             <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                <div class="bg-[#1952E1] h-full w-[98%] rounded-full"></div>
+                                <div class="bg-[#1952E1] h-full rounded-full" style="width: 98%;"></div>
                             </div>
                             <div class="flex items-center justify-between text-[10px] text-slate-400">
                                 <span>Tier 1 Platinum Specialist</span>
