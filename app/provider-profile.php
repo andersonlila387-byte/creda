@@ -135,14 +135,14 @@ require_once __DIR__ . '/components/head.php';
                 <div class="p-5 sm:p-8 space-y-6">
                     
                     <!-- Identity & Action Cluster Row -->
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 w-full">
                         
                         <!-- Left: Avatar & Bio Headline -->
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                        <div class="flex flex-col sm:flex-row items-center sm:items-center gap-5 sm:gap-6 flex-1 min-w-0">
                             
                             <!-- Bigger Fully Rounded Avatar with Verified Ring -->
-                            <div class="relative shrink-0 mx-auto sm:mx-0">
-                                <div class="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full border-2 border-slate-200/90 p-1 bg-white shadow-sm overflow-hidden flex items-center justify-center">
+                            <div class="relative shrink-0">
+                                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-slate-200/90 p-1 bg-white shadow-sm overflow-hidden flex items-center justify-center" style="width: 104px; height: 104px;">
                                     <img 
                                         src="<?= htmlspecialchars($avatar_url) ?>" 
                                         alt="<?= $provider_name ?>" 
@@ -155,16 +155,16 @@ require_once __DIR__ . '/components/head.php';
                             </div>
 
                             <!-- Typography & Meta -->
-                            <div class="space-y-1.5 text-center sm:text-left">
+                            <div class="space-y-1.5 text-center sm:text-left flex-1 min-w-0">
                                 <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
                                     <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                                         <?= $provider_name ?>
                                     </h1>
-                                    <span class="inline-flex items-center gap-1 bg-blue-50 text-[#1952E1] border border-blue-200/80 px-2.5 py-0.5 rounded-[3px] text-[11px] font-bold">
+                                    <span class="inline-flex items-center gap-1 bg-blue-50 text-[#1952E1] border border-blue-200/80 px-2.5 py-0.5 rounded-[3px] text-[11px] font-bold shrink-0">
                                         <i class="ph-fill ph-seal-check text-xs text-[#1952E1]"></i>
                                         <span>Creda Verified Pro</span>
                                     </span>
-                                    <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-[3px] text-[11px] font-semibold">
+                                    <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-[3px] text-[11px] font-semibold shrink-0">
                                         <span>Top 1% Specialist</span>
                                     </span>
                                 </div>
@@ -174,29 +174,29 @@ require_once __DIR__ . '/components/head.php';
                                 </p>
 
                                 <div class="flex items-center justify-center sm:justify-start gap-3 text-xs text-slate-500 flex-wrap pt-0.5 font-medium">
-                                    <span class="flex items-center gap-1 text-slate-600">
+                                    <span class="flex items-center gap-1 text-slate-600 shrink-0">
                                         <i class="ph-bold ph-at text-slate-400"></i>
                                         <span><?= $provider_handle ?></span>
                                     </span>
                                     <span class="text-slate-300">•</span>
-                                    <span class="flex items-center gap-1 text-slate-600">
+                                    <span class="flex items-center gap-1 text-slate-600 shrink-0">
                                         <i class="ph-bold ph-map-pin text-[#1952E1]"></i>
                                         <span><?= $provider_location ?></span>
                                     </span>
                                     <span class="text-slate-300">•</span>
-                                    <span class="flex items-center gap-1 text-slate-600">
+                                    <span class="flex items-center gap-1 text-slate-600 shrink-0">
                                         <i class="ph-bold ph-clock text-slate-400"></i>
                                         <span>Local Time: <?= date('g:i A') ?> (WAT)</span>
                                     </span>
                                     <span class="text-slate-300">•</span>
-                                    <span class="text-slate-500">Member since <?= $member_since ?></span>
+                                    <span class="text-slate-500 shrink-0">Member since <?= $member_since ?></span>
                                 </div>
                             </div>
 
                         </div>
 
                         <!-- Right: Action Button Cluster (Responsive Grid on Mobile) -->
-                        <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 w-full lg:w-auto shrink-0 pt-2 lg:pt-0">
+                        <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 shrink-0 pt-2 lg:pt-0">
                             
                             <!-- Share / Copy Link -->
                             <button 
