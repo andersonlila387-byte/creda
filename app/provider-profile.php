@@ -1,11 +1,13 @@
 <?php 
 /**
- * Scriptly Escrow - Modern Creative Bento Provider Profile
+ * Creda Escrow - UI/UX Pro Max Bento Provider Profile
  * 
- * Layout Architecture:
- * - Top Bento Card (100% Full Width): Luxury Dark Slate Hero with Ambient Radial Lighting, High-Impact Avatar, Floating KPI Pods, Quick Actions & Live Local Time
- * - Left Column (65% Width): Executive Summary, Visual Tech Stack Matrix, Active Service Packages, Verified Escrow Milestone History & Client Testimonials
- * - Right Column (35% Width): Direct Escrow Contract Estimator, 98/100 Trust Score Gauge, Verification Credentials, Availability Radar & Dispute Protection
+ * Architecture:
+ * - Single Accent Palette: Creda Royal Blue (#1952E1) + Slate Neutrals + Pure White. Zero rainbow color clutter.
+ * - Bento 3-Block Layout:
+ *   1. Top Card (100% Full Width): Profile header, high-impact identity, action cluster & 4 minimalist KPI metric pods.
+ *   2. Left Column (65% Width): Professional overview, core commitments, verified skills matrix, service packages, and escrow reviews.
+ *   3. Right Column (35% Width): Sticky escrow hiring module, milestone tier estimator, trust score gauge & operational metrics.
  */
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -113,65 +115,47 @@ require_once __DIR__ . '/components/head.php';
                     <span>Back to Talent Directory</span>
                 </a>
 
-                <div class="flex items-center gap-2 text-slate-400">
-                    <span class="inline-flex items-center gap-1 text-[11px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-[3px] font-bold border border-emerald-200/60">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div class="flex items-center gap-2 text-slate-500">
+                    <span class="inline-flex items-center gap-1.5 text-[11px] text-slate-700 bg-white px-2.5 py-1 rounded-[3px] font-semibold border border-slate-200/90 shadow-2xs">
+                        <span class="w-2 h-2 rounded-full bg-[#1952E1]"></span>
                         <span>Available for Escrow Projects</span>
                     </span>
                 </div>
             </nav>
 
             <!-- ====================================================================== -->
-            <!-- 1. TOP BENTO CARD: 100% FULL-WIDTH PROFILE HERO (CREDA LIGHT LUXURY)   -->
+            <!-- 1. TOP BENTO CARD: 100% FULL-WIDTH PROFILE HEADER                      -->
             <!-- ====================================================================== -->
-            <section class="w-full bg-white rounded-[3px] border border-slate-200/90 shadow-sm relative overflow-hidden">
+            <section class="w-full bg-white rounded-[3px] border border-slate-200/90 shadow-sm overflow-hidden">
                 
-                <!-- Top Decorative Cover Banner -->
-                <div class="h-32 sm:h-44 w-full bg-gradient-to-r from-[#0C2D7E] via-[#1952E1] to-[#2563EB] relative overflow-hidden">
-                    <!-- Subtle Geometric Dot Grid -->
-                    <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.18)_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
-                    <!-- Ambient Soft Lighting -->
-                    <div class="absolute -top-12 -right-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-                    <div class="absolute -bottom-10 left-1/4 w-72 h-36 bg-blue-400/20 rounded-full blur-xl pointer-events-none"></div>
-                    
-                    <!-- Top Right Floating Trust Pill Badges -->
-                    <div class="absolute top-4 right-4 sm:top-5 sm:right-6 flex items-center gap-2">
-                        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/20 backdrop-blur-md text-white text-xs font-semibold border border-white/20">
-                            <i class="ph-fill ph-shield-check text-blue-300"></i>
-                            <span>100% Escrow Guaranteed</span>
-                        </span>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold shadow-xs">
-                            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                            <span>Available for Hire</span>
-                        </span>
-                    </div>
-                </div>
+                <!-- Single Primary Brand Accent Line -->
+                <div class="h-1.5 w-full bg-[#1952E1]"></div>
 
-                <!-- Main Profile Content Body (Overlapping Avatar) -->
-                <div class="p-6 sm:p-8 pt-0 relative z-10">
+                <!-- Inner Content Area -->
+                <div class="p-6 sm:p-8 space-y-6">
                     
-                    <!-- Main Header Row: Identity (Left) & Actions (Right) -->
-                    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 -mt-14 sm:-mt-16">
+                    <!-- Identity & Action Cluster Row -->
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         
-                        <!-- Left: Avatar, Badges & Specialist Title -->
-                        <div class="flex flex-col sm:flex-row items-start sm:items-end gap-5">
+                        <!-- Left: Avatar & Bio Headline -->
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                             
-                            <!-- Square Rounded Avatar with Status Ring -->
+                            <!-- Square Rounded Avatar with Brand Ring -->
                             <div class="relative shrink-0">
-                                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-[3px] p-1 bg-white ring-4 ring-white shadow-md">
+                                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-[3px] border border-slate-200 p-0.5 bg-white shadow-xs">
                                     <img 
                                         src="<?= htmlspecialchars($avatar_url) ?>" 
                                         alt="<?= $provider_name ?>" 
                                         class="w-full h-full rounded-[2px] object-cover bg-slate-100"
                                     >
                                 </div>
-                                <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full ring-2 ring-white flex items-center justify-center" title="Online & Available Now">
-                                    <span class="w-2 h-2 rounded-full bg-white"></span>
+                                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-[#1952E1] rounded-full ring-2 ring-white flex items-center justify-center" title="Verified Available">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
                                 </span>
                             </div>
 
                             <!-- Typography & Meta -->
-                            <div class="space-y-1 sm:pb-1">
+                            <div class="space-y-1">
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                                         <?= $provider_name ?>
@@ -180,13 +164,12 @@ require_once __DIR__ . '/components/head.php';
                                         <i class="ph-fill ph-seal-check text-xs text-[#1952E1]"></i>
                                         <span>Creda Verified Pro</span>
                                     </span>
-                                    <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200/80 px-2 py-0.5 rounded-[3px] text-[10px] font-bold">
-                                        <i class="ph-fill ph-sparkle text-xs text-amber-500"></i>
-                                        <span>Top 1% Talent</span>
+                                    <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-[3px] text-[11px] font-semibold">
+                                        <span>Top 1% Specialist</span>
                                     </span>
                                 </div>
 
-                                <p class="text-sm sm:text-base font-bold text-slate-700">
+                                <p class="text-sm sm:text-base font-semibold text-slate-700">
                                     <?= $provider_title ?>
                                 </p>
 
@@ -213,13 +196,13 @@ require_once __DIR__ . '/components/head.php';
                         </div>
 
                         <!-- Right: Action Button Cluster -->
-                        <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0 lg:pb-1">
+                        <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
                             
                             <!-- Share / Copy Link -->
                             <button 
                                 onclick="copyProfileLink()" 
-                                class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 text-xs font-bold rounded-[3px] transition-all border border-slate-200 cursor-pointer shadow-2xs"
-                                title="Share & Copy Profile URL"
+                                class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 text-xs font-bold rounded-[3px] transition-colors border border-slate-200 cursor-pointer shadow-2xs"
+                                title="Share Profile Link"
                             >
                                 <i class="ph-bold ph-share-network text-sm"></i>
                                 <span class="hidden sm:inline">Share</span>
@@ -228,7 +211,7 @@ require_once __DIR__ . '/components/head.php';
                             <!-- Message Chat -->
                             <a 
                                 href="messages.php?user=<?= urlencode($provider['user_id']) ?>" 
-                                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded-[3px] transition-all border border-slate-300 shadow-2xs"
+                                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded-[3px] transition-colors border border-slate-300 shadow-2xs"
                             >
                                 <i class="ph-bold ph-chat-circle-dots text-sm text-[#1952E1]"></i>
                                 <span>Message</span>
@@ -237,7 +220,7 @@ require_once __DIR__ . '/components/head.php';
                             <!-- Primary Hire Button -->
                             <a 
                                 href="post-project.php?provider_id=<?= $provider['user_id'] ?>" 
-                                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-black rounded-[3px] transition-all shadow-md shadow-blue-600/20 group"
+                                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-black rounded-[3px] transition-all shadow-md shadow-blue-600/20 group"
                             >
                                 <i class="ph-bold ph-handshake text-sm group-hover:scale-110 transition-transform"></i>
                                 <span>Hire Specialist</span>
@@ -248,62 +231,44 @@ require_once __DIR__ . '/components/head.php';
 
                     </div>
 
-                    <!-- Floating KPI Pods (Clean Bento Style) -->
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mt-6 pt-6 border-t border-slate-100">
+                    <!-- Bento Minimalist KPI Metrics Bar -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 pt-6 border-t border-slate-100">
                         
-                        <!-- KPI 1: Job Success -->
-                        <div class="bg-slate-50/80 hover:bg-white border border-slate-200/80 hover:border-emerald-300 hover:shadow-xs rounded-[3px] p-3.5 transition-all flex items-center gap-3.5 group">
-                            <div class="w-10 h-10 rounded-[3px] bg-emerald-50 text-emerald-600 border border-emerald-200/80 flex items-center justify-center shrink-0">
-                                <i class="ph-bold ph-trend-up text-xl"></i>
+                        <!-- Metric 1: Job Success -->
+                        <div class="bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-[#1952E1] rounded-[3px] p-4 transition-all">
+                            <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Job Success Score</div>
+                            <div class="text-2xl font-black text-slate-900 mt-1 flex items-baseline gap-1.5">
+                                <span><?= $provider_job_success ?>%</span>
+                                <span class="text-[10px] font-bold text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] border border-blue-200/80">Top Rated</span>
                             </div>
-                            <div>
-                                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Job Success</div>
-                                <div class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
-                                    <span><?= $provider_job_success ?>%</span>
-                                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-[2px]">Top Rated</span>
-                                </div>
-                            </div>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Completed without dispute</p>
                         </div>
 
-                        <!-- KPI 2: Star Rating -->
-                        <div class="bg-slate-50/80 hover:bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xs rounded-[3px] p-3.5 transition-all flex items-center gap-3.5 group">
-                            <div class="w-10 h-10 rounded-[3px] bg-amber-50 text-amber-500 border border-amber-200/80 flex items-center justify-center shrink-0">
-                                <i class="ph-fill ph-star text-xl"></i>
+                        <!-- Metric 2: Client Rating -->
+                        <div class="bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-[#1952E1] rounded-[3px] p-4 transition-all">
+                            <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Client Rating</div>
+                            <div class="text-2xl font-black text-slate-900 mt-1">
+                                <?= $provider_rating ?> <span class="text-xs font-normal text-slate-400">/ 5.0</span>
                             </div>
-                            <div>
-                                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Client Rating</div>
-                                <div class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1">
-                                    <span class="text-amber-500">★ <?= $provider_rating ?></span>
-                                    <span class="text-xs text-slate-400 font-normal">(<?= $provider_reviews_count ?>)</span>
-                                </div>
-                            </div>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Based on <?= $provider_reviews_count ?> client reviews</p>
                         </div>
 
-                        <!-- KPI 3: Hourly Rate -->
-                        <div class="bg-slate-50/80 hover:bg-white border border-slate-200/80 hover:border-blue-300 hover:shadow-xs rounded-[3px] p-3.5 transition-all flex items-center gap-3.5 group">
-                            <div class="w-10 h-10 rounded-[3px] bg-blue-50 text-[#1952E1] border border-blue-200/80 flex items-center justify-center shrink-0">
-                                <i class="ph-bold ph-currency-circle-dollar text-xl"></i>
+                        <!-- Metric 3: Completed Escrows -->
+                        <div class="bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-[#1952E1] rounded-[3px] p-4 transition-all">
+                            <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Escrows Completed</div>
+                            <div class="text-2xl font-black text-slate-900 mt-1">
+                                <?= $provider_completed ?> <span class="text-xs font-normal text-slate-400">Contracts</span>
                             </div>
-                            <div>
-                                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Hourly Rate</div>
-                                <div class="text-base sm:text-lg font-black text-slate-900">
-                                    ₦<?= number_format($provider_hourly) ?> <span class="text-[10px] text-slate-400 font-normal">/ hr</span>
-                                </div>
-                            </div>
+                            <p class="text-[11px] text-slate-500 mt-0.5">100% Milestone payout release</p>
                         </div>
 
-                        <!-- KPI 4: Escrow Projects -->
-                        <div class="bg-slate-50/80 hover:bg-white border border-slate-200/80 hover:border-indigo-300 hover:shadow-xs rounded-[3px] p-3.5 transition-all flex items-center gap-3.5 group">
-                            <div class="w-10 h-10 rounded-[3px] bg-indigo-50 text-indigo-600 border border-indigo-200/80 flex items-center justify-center shrink-0">
-                                <i class="ph-bold ph-shield-check text-xl"></i>
+                        <!-- Metric 4: Starting Hourly Rate -->
+                        <div class="bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-[#1952E1] rounded-[3px] p-4 transition-all">
+                            <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Hourly Baseline</div>
+                            <div class="text-2xl font-black text-slate-900 mt-1">
+                                ₦<?= number_format($provider_hourly) ?> <span class="text-xs font-normal text-slate-400">/ hr</span>
                             </div>
-                            <div>
-                                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Escrows Completed</div>
-                                <div class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-1.5">
-                                    <span><?= $provider_completed ?></span>
-                                    <span class="text-[10px] font-bold text-[#1952E1] bg-blue-50 border border-blue-200 px-1.5 py-0.2 rounded-[2px]">0 Disputes</span>
-                                </div>
-                            </div>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Milestone contracts accepted</p>
                         </div>
 
                     </div>
@@ -322,33 +287,28 @@ require_once __DIR__ . '/components/head.php';
                 <!-- ================================================================== -->
                 <div class="w-full lg:w-[65%] space-y-6">
 
-                    <!-- Bento Tile 1: Executive Summary & Highlights -->
+                    <!-- Bento Tile 1: Executive Summary & Bio -->
                     <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-5">
                         
-                        <!-- Header with Value Tag -->
+                        <!-- Header -->
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-[3px] bg-blue-50 text-[#1952E1] flex items-center justify-center font-bold">
-                                    <i class="ph-bold ph-identification-card text-base"></i>
-                                </div>
-                                <div>
-                                    <h2 class="text-sm sm:text-base font-bold text-slate-900">Executive Summary & Bio</h2>
-                                    <p class="text-[11px] text-slate-400">Verified Technical Qualifications</p>
-                                </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Professional Overview</h2>
+                                <p class="text-xs text-slate-500">Verified Technical Qualifications & Scope</p>
                             </div>
-                            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-50 px-2.5 py-1 rounded-[3px] border border-slate-200">
-                                <i class="ph-fill ph-seal-check text-[#1952E1]"></i>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-[3px] border border-slate-200">
+                                <i class="ph-bold ph-shield-check text-[#1952E1]"></i>
                                 <span>Vetted Talent</span>
                             </span>
                         </div>
 
-                        <!-- Punchy Value Proposition Callout -->
-                        <div class="p-4 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-slate-50 border-l-4 border-l-[#1952E1] border-y border-r border-slate-200/80 rounded-[3px] text-slate-800 text-xs sm:text-sm font-semibold leading-relaxed">
+                        <!-- Highlight Value Callout -->
+                        <div class="p-4 bg-slate-50 border-l-4 border-l-[#1952E1] border-y border-r border-slate-200/80 rounded-[3px] text-slate-800 text-xs sm:text-sm font-semibold leading-relaxed">
                             "Specialized in architecting production-grade web systems, high-concurrency database schemas, and milestone escrow projects with guaranteed delivery."
                         </div>
 
-                        <!-- Detailed Narrative -->
-                        <div class="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-3 font-normal">
+                        <!-- Narrative Bio -->
+                        <div class="text-xs sm:text-sm text-slate-600 leading-relaxed space-y-3 font-normal">
                             <?php if (!empty($provider['bio'])): ?>
                                 <?= nl2br(htmlspecialchars($provider['bio'])) ?>
                             <?php else: ?>
@@ -361,119 +321,105 @@ require_once __DIR__ . '/components/head.php';
                             <?php endif; ?>
                         </div>
 
-                        <!-- 3 Micro Value Pillars -->
+                        <!-- 3 Core Commitments -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-100">
-                            <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-[3px] space-y-1">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                                    <i class="ph-bold ph-lightning text-amber-500"></i>
-                                    <span>Fast Delivery</span>
+                            <div class="p-3.5 bg-slate-50 border border-slate-200/70 rounded-[3px] space-y-1">
+                                <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                                    <i class="ph-bold ph-lightning text-[#1952E1]"></i>
+                                    <span>Fast Turnaround</span>
                                 </div>
-                                <p class="text-[11px] text-slate-500">Average <?= $provider_turnaround ?> milestone turnaround</p>
+                                <p class="text-[11px] text-slate-500">Average <?= $provider_turnaround ?> milestone completion</p>
                             </div>
 
-                            <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-[3px] space-y-1">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                                    <i class="ph-bold ph-shield-check text-emerald-600"></i>
+                            <div class="p-3.5 bg-slate-50 border border-slate-200/70 rounded-[3px] space-y-1">
+                                <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                                    <i class="ph-bold ph-shield text-[#1952E1]"></i>
                                     <span>Escrow Protected</span>
                                 </div>
                                 <p class="text-[11px] text-slate-500">100% milestone approval release guarantee</p>
                             </div>
 
-                            <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-[3px] space-y-1">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                            <div class="p-3.5 bg-slate-50 border border-slate-200/70 rounded-[3px] space-y-1">
+                                <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                                     <i class="ph-bold ph-code text-[#1952E1]"></i>
                                     <span>Clean Stack</span>
                                 </div>
-                                <p class="text-[11px] text-slate-500">Documented, maintainable codebases</p>
+                                <p class="text-[11px] text-slate-500">Maintainable, documented code delivery</p>
                             </div>
                         </div>
 
-                        <!-- Academic Credential Badge (If available) -->
+                        <!-- Academic Credential (if present) -->
                         <?php if (!empty($provider['institution'])): ?>
-                            <div class="p-3 bg-slate-50/80 border border-slate-200 rounded-[3px] flex items-center justify-between text-xs">
+                            <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-[3px] flex items-center justify-between text-xs">
                                 <div class="flex items-center gap-2 text-slate-700">
                                     <i class="ph-bold ph-graduation-cap text-[#1952E1] text-base"></i>
-                                    <span>Academic Credential: <strong class="text-slate-900"><?= htmlspecialchars($provider['institution']) ?></strong> <?= !empty($provider['department']) ? '• ' . htmlspecialchars($provider['department']) : '' ?></span>
+                                    <span>Academic Record: <strong class="text-slate-900"><?= htmlspecialchars($provider['institution']) ?></strong> <?= !empty($provider['department']) ? '• ' . htmlspecialchars($provider['department']) : '' ?></span>
                                 </div>
-                                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-[2px] border border-emerald-200">Verified</span>
+                                <span class="text-[10px] font-bold text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80">Verified</span>
                             </div>
                         <?php endif; ?>
 
                     </div>
 
-                    <!-- Bento Tile 2: Technical Skills & Arsenal Matrix -->
+                    <!-- Bento Tile 2: Skills & Technical Arsenal -->
                     <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-4">
                         
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-[3px] bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-                                    <i class="ph-bold ph-code-block text-base"></i>
-                                </div>
-                                <div>
-                                    <h2 class="text-sm sm:text-base font-bold text-slate-900">Technical Arsenal & Skills</h2>
-                                    <p class="text-[11px] text-slate-400">Validated through technical assessments</p>
-                                </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Skills & Specializations</h2>
+                                <p class="text-xs text-slate-500">Validated through Creda technical benchmarking</p>
                             </div>
-                            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[3px] border border-blue-200/60">
-                                <i class="ph-bold ph-exam"></i>
-                                <span>Score: <?= $assessment_score ?>% (Top 5%)</span>
+                            <span class="inline-flex items-center gap-1 text-xs font-bold text-[#1952E1] bg-blue-50 px-2.5 py-1 rounded-[3px] border border-blue-200/70">
+                                <i class="ph-bold ph-check-circle"></i>
+                                <span>Score: <?= $assessment_score ?>% (Passed)</span>
                             </span>
                         </div>
 
-                        <!-- Skill Tags with Interactive Hover & Verification Indicators -->
-                        <div class="flex flex-wrap gap-2.5 pt-1">
+                        <!-- Clean Monochromatic Skill Tags -->
+                        <div class="flex flex-wrap gap-2 pt-1">
                             <?php foreach ($skills_list as $skill): ?>
-                                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-blue-50 border border-slate-200/80 hover:border-blue-300 text-slate-800 hover:text-[#1952E1] text-xs font-semibold rounded-[3px] transition-all group">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#1952E1] group-hover:scale-125 transition-transform"></span>
+                                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-[#1952E1] text-slate-700 hover:text-[#1952E1] text-xs font-semibold rounded-[3px] transition-colors cursor-default group">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#1952E1]"></span>
                                     <span><?= htmlspecialchars($skill) ?></span>
-                                    <i class="ph-bold ph-check text-[10px] text-emerald-600 opacity-60 group-hover:opacity-100"></i>
                                 </span>
                             <?php endforeach; ?>
                         </div>
 
-                        <!-- Skill Assessment Footnote -->
+                        <!-- Footnote -->
                         <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                            <span class="flex items-center gap-1">
-                                <i class="ph-fill ph-seal-check text-blue-600 text-xs"></i>
-                                <span>Platform tested for code quality, architectural standards, and security.</span>
-                            </span>
+                            <span>Evaluated for structural code quality, architecture standards, and reliability.</span>
                             <span class="font-bold text-slate-700"><?= count($skills_list) ?> Skills Verified</span>
                         </div>
 
                     </div>
 
-                    <!-- Bento Tile 3: Service Packages & Fixed Escrows -->
+                    <!-- Bento Tile 3: Service Packages & Deliverables -->
                     <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-5">
                         
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-[3px] bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-                                    <i class="ph-bold ph-package text-base"></i>
-                                </div>
-                                <div>
-                                    <h2 class="text-sm sm:text-base font-bold text-slate-900">Service Packages</h2>
-                                    <p class="text-[11px] text-slate-400">Pre-defined milestone deliverables with fixed pricing</p>
-                                </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Service Packages</h2>
+                                <p class="text-xs text-slate-500">Fixed-deliverable scopes protected by escrow milestone release</p>
                             </div>
-                            <span class="text-xs font-bold text-slate-500"><?= count($packages) ?> Packages</span>
+                            <span class="text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-[3px]"><?= count($packages) ?> Packages</span>
                         </div>
 
                         <?php if (empty($packages)): ?>
-                            <!-- Custom Escrow Proposal Card -->
-                            <div class="p-8 text-center bg-gradient-to-br from-slate-50 to-blue-50/40 border border-slate-200/80 rounded-[3px] space-y-4">
-                                <div class="w-12 h-12 bg-white text-[#1952E1] rounded-[3px] border border-slate-200 shadow-xs flex items-center justify-center mx-auto">
+                            <!-- Clean Custom Milestone Proposal Callout -->
+                            <div class="p-8 text-center bg-slate-50 border border-slate-200/80 rounded-[3px] space-y-4">
+                                <div class="w-12 h-12 bg-white text-[#1952E1] rounded-[3px] border border-slate-200 shadow-2xs flex items-center justify-center mx-auto">
                                     <i class="ph-bold ph-briefcase-metal text-2xl"></i>
                                 </div>
                                 <div class="space-y-1">
                                     <h3 class="text-sm font-bold text-slate-900">Custom Milestone Contracts Available</h3>
                                     <p class="text-xs text-slate-500 max-w-md mx-auto">
-                                        This provider undertakes custom escrow projects. Submit your milestone specification or project brief to receive a formal proposal.
+                                        This specialist accepts custom escrow projects. Submit your milestone specification or project brief to receive a structured proposal.
                                     </p>
                                 </div>
                                 <div class="pt-2">
                                     <a href="post-project.php?provider_id=<?= $provider['user_id'] ?>" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-bold rounded-[3px] transition-colors shadow-2xs">
                                         <i class="ph-bold ph-plus-circle text-sm"></i>
-                                        <span>Propose a Project to <?= $first_name ?></span>
+                                        <span>Propose Project to <?= $first_name ?></span>
                                     </a>
                                 </div>
                             </div>
@@ -485,24 +431,24 @@ require_once __DIR__ . '/components/head.php';
                                     $pkg_price = (float)($pkg['starting_price'] ?: 25000);
                                     $pkg_days = (int)($pkg['delivery_days'] ?: 3);
                                 ?>
-                                    <div class="border border-slate-200/90 rounded-[3px] bg-white hover:border-[#1952E1] hover:shadow-md transition-all flex flex-col group overflow-hidden">
+                                    <div class="border border-slate-200/90 rounded-[3px] bg-white hover:border-[#1952E1] hover:shadow-sm transition-all flex flex-col group overflow-hidden">
                                         
-                                        <!-- Image / Ribbon -->
+                                        <!-- Image / Header -->
                                         <div class="relative aspect-video bg-slate-100 overflow-hidden">
                                             <?php if ($pkg_img): ?>
                                                 <img src="<?= htmlspecialchars($pkg_img) ?>" alt="<?= htmlspecialchars($pkg['title']) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                             <?php else: ?>
-                                                <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-gradient-to-br from-slate-100 to-slate-200">
-                                                    <i class="ph-bold ph-image text-3xl mb-1 text-slate-300"></i>
+                                                <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50">
+                                                    <i class="ph-bold ph-package text-3xl mb-1 text-slate-300"></i>
                                                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500"><?= htmlspecialchars($pkg['category_name'] ?: 'Verified Service') ?></span>
                                                 </div>
                                             <?php endif; ?>
                                             
-                                            <div class="absolute top-2.5 left-2.5 bg-slate-900/85 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-[3px] uppercase tracking-wider shadow-sm">
+                                            <div class="absolute top-2.5 left-2.5 bg-slate-900/80 text-white text-[10px] font-semibold px-2 py-0.5 rounded-[2px] uppercase tracking-wider">
                                                 <?= htmlspecialchars($pkg['category_name'] ?: 'Service') ?>
                                             </div>
 
-                                            <div class="absolute bottom-2.5 right-2.5 bg-white/95 backdrop-blur-md text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-[3px] shadow-sm">
+                                            <div class="absolute bottom-2.5 right-2.5 bg-white text-slate-900 text-xs font-black px-2.5 py-1 rounded-[2px] shadow-sm border border-slate-200/80">
                                                 ₦<?= number_format($pkg_price) ?>
                                             </div>
                                         </div>
@@ -517,11 +463,11 @@ require_once __DIR__ . '/components/head.php';
 
                                             <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                                                 <div class="flex items-center gap-1.5">
-                                                    <i class="ph-bold ph-clock text-blue-600"></i>
+                                                    <i class="ph-bold ph-clock text-[#1952E1]"></i>
                                                     <span class="text-[11px] font-medium"><?= $pkg_days ?> Days Delivery</span>
                                                 </div>
-                                                <div class="flex items-center gap-1 text-[11px] text-emerald-600 font-semibold">
-                                                    <i class="ph-bold ph-arrows-clockwise text-xs"></i>
+                                                <div class="flex items-center gap-1 text-[11px] text-slate-600 font-semibold">
+                                                    <i class="ph-bold ph-check text-xs"></i>
                                                     <span>Revisions Included</span>
                                                 </div>
                                             </div>
@@ -539,48 +485,43 @@ require_once __DIR__ . '/components/head.php';
 
                     </div>
 
-                    <!-- Bento Tile 4: Verified Milestone Escrow History & Client Feedback -->
+                    <!-- Bento Tile 4: Verified Milestone Feedback -->
                     <div class="bg-white border border-slate-200/90 rounded-[3px] p-6 shadow-sm space-y-5">
                         
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-[3px] bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-                                    <i class="ph-bold ph-shield-star text-base"></i>
-                                </div>
-                                <div>
-                                    <h2 class="text-sm sm:text-base font-bold text-slate-900">Verified Milestone Feedback</h2>
-                                    <p class="text-[11px] text-slate-400">Tied 100% to completed escrow payments</p>
-                                </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Verified Client Feedback</h2>
+                                <p class="text-xs text-slate-500">Tied directly to completed escrow payments</p>
                             </div>
-                            <div class="flex items-center gap-1 text-amber-500 font-bold text-xs">
+                            <div class="flex items-center gap-1 font-bold text-xs text-slate-900">
                                 <span>★ <?= $provider_rating ?></span>
                                 <span class="text-slate-400 font-normal text-[11px]">(<?= $provider_reviews_count ?> Reviews)</span>
                             </div>
                         </div>
 
-                        <!-- Feedback Stream -->
+                        <!-- Feedback Items Stream -->
                         <div class="space-y-4 divide-y divide-slate-100">
                             
                             <!-- Review Card 1 -->
                             <div class="pt-3 first:pt-0 space-y-2.5">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-[3px] bg-blue-100 text-[#1952E1] font-black text-xs flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center">
                                             DO
                                         </div>
                                         <div>
                                             <div class="flex items-center gap-2">
                                                 <span class="font-bold text-xs text-slate-900">David Olanrewaju</span>
-                                                <span class="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-emerald-200">
-                                                    <i class="ph-fill ph-check-circle text-xs text-emerald-600"></i>
+                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80">
+                                                    <i class="ph-fill ph-check-circle text-xs text-[#1952E1]"></i>
                                                     <span>Verified Escrow Hire</span>
                                                 </span>
                                             </div>
                                             <span class="text-[10px] text-slate-400">Chief Technology Officer • FinTech Project</span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center text-amber-500 text-xs font-black">
-                                        ★★★★★ <span class="text-[11px] text-slate-600 ml-1">5.0</span>
+                                    <div class="text-slate-900 text-xs font-black">
+                                        5.0 <span class="text-slate-400 font-normal">/ 5.0</span>
                                     </div>
                                 </div>
 
@@ -598,22 +539,22 @@ require_once __DIR__ . '/components/head.php';
                             <div class="pt-4 space-y-2.5">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-[3px] bg-indigo-100 text-indigo-700 font-black text-xs flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center">
                                             TF
                                         </div>
                                         <div>
                                             <div class="flex items-center gap-2">
                                                 <span class="font-bold text-xs text-slate-900">Tolulope F.</span>
-                                                <span class="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-emerald-200">
-                                                    <i class="ph-fill ph-check-circle text-xs text-emerald-600"></i>
+                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80">
+                                                    <i class="ph-fill ph-check-circle text-xs text-[#1952E1]"></i>
                                                     <span>Verified Escrow Hire</span>
                                                 </span>
                                             </div>
                                             <span class="text-[10px] text-slate-400">Founder & Product Lead</span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center text-amber-500 text-xs font-black">
-                                        ★★★★★ <span class="text-[11px] text-slate-600 ml-1">5.0</span>
+                                    <div class="text-slate-900 text-xs font-black">
+                                        5.0 <span class="text-slate-400 font-normal">/ 5.0</span>
                                     </div>
                                 </div>
 
@@ -630,9 +571,9 @@ require_once __DIR__ . '/components/head.php';
                         </div>
 
                         <!-- Escrow Badge Seal -->
-                        <div class="p-3.5 bg-blue-50/80 border border-blue-200/60 rounded-[3px] flex items-center gap-3 text-xs text-[#1952E1]">
+                        <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-[3px] flex items-center gap-3 text-xs text-slate-700">
                             <i class="ph-fill ph-shield-check text-xl shrink-0 text-[#1952E1]"></i>
-                            <div class="text-[11px] text-slate-700 leading-snug">
+                            <div class="text-[11px] text-slate-600 leading-snug">
                                 <strong class="text-slate-900">100% Verified Escrow Feedback:</strong> Reviews on Creda can only be submitted after funds are safely released to the provider upon milestone approval.
                             </div>
                         </div>
@@ -647,15 +588,15 @@ require_once __DIR__ . '/components/head.php';
                 <div class="w-full lg:w-[35%] space-y-6 shrink-0 lg:sticky lg:top-4">
 
                     <!-- Bento Sidebar 1: Direct Hire & Escrow Contract Estimator -->
-                    <div class="bg-white border-2 border-[#1952E1] rounded-[3px] p-5 sm:p-6 shadow-md space-y-5 relative overflow-hidden">
+                    <div class="bg-white border-2 border-[#1952E1] rounded-[3px] p-5 sm:p-6 shadow-sm space-y-5 relative overflow-hidden">
                         
                         <!-- Top Header Strip -->
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80">
                                 Direct Engagement
                             </span>
-                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-[3px] border border-emerald-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                            <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-700 bg-slate-50 px-2 py-0.5 rounded-[3px] border border-slate-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#1952E1]"></span>
                                 <span>Accepting Contracts</span>
                             </span>
                         </div>
@@ -668,7 +609,7 @@ require_once __DIR__ . '/components/head.php';
                                 <span class="text-xs text-slate-400 font-semibold">/ hour</span>
                             </div>
                             <p class="text-[11px] text-slate-500 mt-1 leading-snug">
-                                Negotiable for milestone escrows and fixed-budget contracts.
+                                Applicable for milestone escrows and fixed-budget contracts.
                             </p>
                         </div>
 
@@ -698,12 +639,12 @@ require_once __DIR__ . '/components/head.php';
                         </div>
 
                         <!-- Escrow Security Assurance Box -->
-                        <div class="p-3.5 bg-emerald-50/70 border border-emerald-200/80 rounded-[3px] space-y-2 text-xs">
+                        <div class="p-3.5 bg-slate-50 border border-slate-200/90 rounded-[3px] space-y-2 text-xs">
                             <div class="flex items-start gap-2.5">
-                                <i class="ph-bold ph-shield-check text-emerald-600 text-lg shrink-0 mt-0.5"></i>
+                                <i class="ph-bold ph-shield-check text-[#1952E1] text-lg shrink-0 mt-0.5"></i>
                                 <div class="space-y-0.5">
                                     <strong class="text-slate-900 block text-xs">100% Escrow Protection</strong>
-                                    <p class="text-[11px] text-slate-600 leading-snug">
+                                    <p class="text-[11px] text-slate-500 leading-snug">
                                         Your payment is deposited securely in escrow and only released after you inspect and approve deliverables.
                                     </p>
                                 </div>
@@ -740,7 +681,7 @@ require_once __DIR__ . '/components/head.php';
                                 <i class="ph-bold ph-seal-check text-lg text-[#1952E1]"></i>
                                 <h3 class="text-sm font-bold text-slate-900">Creda Trust Score</h3>
                             </div>
-                            <span class="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-[2px] border border-emerald-200">
+                            <span class="text-xs font-black text-[#1952E1] bg-blue-50 px-2 py-0.5 rounded-[2px] border border-blue-200/80">
                                 98 / 100
                             </span>
                         </div>
@@ -748,7 +689,7 @@ require_once __DIR__ . '/components/head.php';
                         <!-- Progress Bar Visual -->
                         <div class="space-y-1">
                             <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                <div class="bg-gradient-to-r from-[#1952E1] to-emerald-500 h-full w-[98%] rounded-full"></div>
+                                <div class="bg-[#1952E1] h-full w-[98%] rounded-full"></div>
                             </div>
                             <div class="flex items-center justify-between text-[10px] text-slate-400">
                                 <span>Tier 1 Platinum Specialist</span>
@@ -763,7 +704,7 @@ require_once __DIR__ . '/components/head.php';
                                     <i class="ph-bold ph-identification-card text-slate-400 text-base"></i>
                                     <span>Government ID / NIN</span>
                                 </div>
-                                <span class="font-bold text-emerald-600 flex items-center gap-1 text-[11px]">
+                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px]">
                                     <i class="ph-bold ph-check"></i> Verified
                                 </span>
                             </div>
@@ -783,7 +724,7 @@ require_once __DIR__ . '/components/head.php';
                                     <i class="ph-bold ph-phone text-slate-400 text-base"></i>
                                     <span>Phone & Email Verified</span>
                                 </div>
-                                <span class="font-bold text-emerald-600 flex items-center gap-1 text-[11px]">
+                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px]">
                                     <i class="ph-bold ph-check"></i> Verified
                                 </span>
                             </div>
@@ -793,7 +734,7 @@ require_once __DIR__ . '/components/head.php';
                                     <i class="ph-bold ph-shield-check text-slate-400 text-base"></i>
                                     <span>Escrow Guarantee Bond</span>
                                 </div>
-                                <span class="font-bold text-emerald-600 flex items-center gap-1 text-[11px]">
+                                <span class="font-bold text-[#1952E1] flex items-center gap-1 text-[11px]">
                                     <i class="ph-bold ph-check"></i> Bonded
                                 </span>
                             </div>
@@ -809,7 +750,7 @@ require_once __DIR__ . '/components/head.php';
                                 <i class="ph-bold ph-gauge text-lg text-[#1952E1]"></i>
                                 <h3 class="text-sm font-bold text-slate-900">Operational Metrics</h3>
                             </div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Live Radar</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Live Standards</span>
                         </div>
 
                         <div class="space-y-3 text-xs">
@@ -820,7 +761,7 @@ require_once __DIR__ . '/components/head.php';
 
                             <div class="flex items-center justify-between">
                                 <span class="text-slate-500">Average Response Time:</span>
-                                <strong class="text-emerald-600">&lt; 30 Mins</strong>
+                                <strong class="text-[#1952E1]">&lt; 30 Mins</strong>
                             </div>
 
                             <div class="flex items-center justify-between">
@@ -842,7 +783,7 @@ require_once __DIR__ . '/components/head.php';
                     </div>
 
                     <!-- Bento Sidebar 4: Dispute-Free Security Guarantee -->
-                    <div class="p-4 bg-gradient-to-br from-blue-50/90 via-indigo-50/40 to-slate-50 border border-blue-200/80 rounded-[3px] space-y-2 text-xs relative overflow-hidden shadow-2xs">
+                    <div class="p-4 bg-slate-50 border border-slate-200/80 rounded-[3px] space-y-2 text-xs relative overflow-hidden">
                         <div class="flex items-center gap-2 font-bold text-[#1952E1]">
                             <i class="ph-fill ph-shield-check text-base text-[#1952E1]"></i>
                             <span>Creda Escrow Assurance</span>
