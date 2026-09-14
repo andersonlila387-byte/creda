@@ -108,7 +108,7 @@ require_once __DIR__ . '/components/head.php';
 <?php include __DIR__ . '/components/sidebar.php'; ?>
 
 <!-- Main Layout Area -->
-<main class="flex-1 flex flex-col h-full w-full min-w-0 overflow-y-auto bg-[#EFF2F7] pb-36 md:pb-8">
+<main class="flex-1 flex flex-col h-full w-full min-w-0 overflow-y-auto bg-[#EFF2F7] pb-[80px] md:pb-8">
     
     <?php include __DIR__ . '/components/header.php'; ?>
 
@@ -903,4 +903,5 @@ function showSavedAlert(msg) {
 </script>
 
 <?php include __DIR__ . '/components/footer.php'; ?>
+
 

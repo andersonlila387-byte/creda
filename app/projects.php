@@ -60,7 +60,7 @@ if (!empty(\)) {
         <?php include __DIR__ . '/components/header.php'; ?>
 
         <!-- Scrollable Content Area -->
-        <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-36 md:pb-6 lg:pb-12 scroll-smooth">
+        <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-[80px] md:pb-6 lg:pb-12 scroll-smooth">
             <div class="max-w-6xl mx-auto space-y-5">
                 
                 <!-- Search & Filters -->
@@ -160,4 +160,5 @@ if (!empty(\)) {
 </div>
 </body>
 </html>
+
 

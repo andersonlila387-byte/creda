@@ -74,7 +74,7 @@ $active_tab = 'services';
     <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
         <?php include __DIR__ . '/components/header.php'; ?>
 
-        <div class="p-4 md:p-8 pt-20 pb-36 md:pt-8 md:pb-8 max-w-6xl mx-auto w-full">
+        <div class="p-4 md:p-8 pt-20 pb-[80px] md:pt-8 md:pb-8 max-w-6xl mx-auto w-full">
             
             <!-- Breadcrumbs -->
             <nav class="flex text-[11px] font-bold text-slate-400 mb-6">
@@ -231,4 +231,5 @@ $active_tab = 'services';
     </script>
 </body>
 </html>
+
 

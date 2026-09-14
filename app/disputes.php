@@ -26,7 +26,7 @@ require_once __DIR__ . '/components/head.php';
 
 <?php include __DIR__ . '/components/sidebar.php'; ?>
 
-<main class="flex-1 flex flex-col h-full w-full min-w-0 overflow-y-auto bg-[#EFF2F7] pb-36 md:pb-8">
+<main class="flex-1 flex flex-col h-full w-full min-w-0 overflow-y-auto bg-[#EFF2F7] pb-[80px] md:pb-8">
     <?php include __DIR__ . '/components/header.php'; ?>
 
     <div class="max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
@@ -94,4 +94,5 @@ require_once __DIR__ . '/components/head.php';
 </main>
 
 <?php include __DIR__ . '/components/footer.php'; ?>
+
 
