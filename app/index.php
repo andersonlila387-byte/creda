@@ -218,8 +218,8 @@ require_once __DIR__ . '/controllers/DashboardController.php';
                                     <a href="messages.php?user=<?= $pro['id'] ?>" class="flex-1 text-center bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold py-2.5 rounded-[3px] transition-colors">
                                         Message
                                     </a>
-                                    <a href="talent.php" class="flex-1 text-center bg-[#1952E1] hover:bg-blue-700 text-white text-[11px] font-bold py-2.5 rounded-[3px] transition-colors shadow-sm">
-                                        View Directory
+                                    <a href="provider-profile.php?id=<?= $pro['id'] ?>" class="flex-1 text-center bg-[#1952E1] hover:bg-blue-700 text-white text-[11px] font-bold py-2.5 rounded-[3px] transition-colors shadow-sm">
+                                        View Profile
                                     </a>
                                 </div>
                             </div>
