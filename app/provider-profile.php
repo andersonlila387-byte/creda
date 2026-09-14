@@ -70,25 +70,39 @@ $stmt_pkgs = $db->prepare($sql_pkgs);
 $stmt_pkgs->execute([$provider['user_id']]);
 $packages = $stmt_pkgs->fetchAll(PDO::FETCH_ASSOC);
 
-// 3. Fallback / Normalized Data Variables
+// 3. Fetch Real Client Reviews
+$sql_reviews = "
+    SELECT cr.*, u.full_name as client_name, u.avatar_url as client_avatar, c.total_amount, c.title as contract_title
+    FROM contract_reviews cr
+    JOIN users u ON cr.client_id = u.id
+    JOIN contracts c ON cr.contract_id = c.id
+    WHERE cr.provider_id = ?
+    ORDER BY cr.created_at DESC
+    LIMIT 10
+";
+$stmt_reviews = $db->prepare($sql_reviews);
+$stmt_reviews->execute([$provider['user_id']]);
+$reviews = $stmt_reviews->fetchAll(PDO::FETCH_ASSOC);
+
+// 4. Normalized Data Variables (Strictly Production - No Fake Data)
 $avatar_url = !empty($provider['avatar_url']) ? $provider['avatar_url'] : '../assets/images/default-avatar.png';
-$provider_name = htmlspecialchars($provider['full_name'] ?: 'Verified Professional');
-$first_name = htmlspecialchars(explode(' ', trim($provider['full_name'] ?: 'Professional'))[0]);
-$provider_handle = htmlspecialchars($provider['username'] ?: strtolower(str_replace(' ', '', $first_name)) . '_' . $provider['user_id']);
-$provider_title = htmlspecialchars($provider['talent_title'] ?: 'Verified Specialist & Technical Partner');
-$provider_location = htmlspecialchars($provider['location'] ?: 'Lagos, Nigeria');
-$provider_hourly = (float)($provider['hourly_rate'] ?: 20000);
-$provider_rating = $provider['rating'] ? number_format((float)$provider['rating'], 1) : '4.9';
-$provider_reviews_count = (int)($provider['rating_count'] ?: 28);
-$provider_job_success = (int)($provider['job_success_percentage'] ?: 99);
-$provider_completed = (int)($provider['completed_projects'] ?: 34);
-$member_since = date('M Y', strtotime($provider['created_at'] ?: '2023-01-01'));
-$provider_turnaround = htmlspecialchars($provider['turnaround_time'] ?: '3 - 5 Days');
-$assessment_score = (int)($provider['assessment_score'] ?: 94);
+$provider_name = htmlspecialchars($provider['full_name'] ?: $provider['username']);
+$first_name = htmlspecialchars(explode(' ', trim($provider_name))[0]);
+$provider_handle = htmlspecialchars($provider['username']);
+$provider_title = htmlspecialchars($provider['talent_title'] ?: 'Verified Specialist');
+$provider_location = htmlspecialchars($provider['location'] ?: 'Location Not Set');
+$provider_hourly = (float)($provider['hourly_rate'] ?: 0);
+$provider_rating = $provider['rating'] ? number_format((float)$provider['rating'], 1) : '0.0';
+$provider_reviews_count = (int)($provider['rating_count'] ?: 0);
+$provider_job_success = (int)($provider['job_success_percentage'] ?: 0);
+$provider_completed = (int)($provider['completed_projects'] ?: 0);
+$member_since = date('M Y', strtotime($provider['created_at'] ?: 'now'));
+$provider_turnaround = htmlspecialchars($provider['turnaround_time'] ?: 'Not Specified');
+$assessment_score = (int)($provider['assessment_score'] ?: 0);
 
 // Parse skills list
-$skills_raw = $provider['skills'] ?: 'Web Architecture, PHP, MySQL, REST APIs, Tailwind CSS, System Design, React';
-$skills_list = array_values(array_filter(array_map('trim', explode(',', $skills_raw))));
+$skills_raw = $provider['skills'] ?: '';
+$skills_list = $skills_raw ? array_values(array_filter(array_map('trim', explode(',', $skills_raw)))) : [];
 
 $page_title = $provider_name . ' — Verified Specialist';
 $active_tab = 'talent';
@@ -314,11 +328,8 @@ require_once __DIR__ . '/components/head.php';
                             <?php if (!empty($provider['bio'])): ?>
                                 <?= nl2br(htmlspecialchars($provider['bio'])) ?>
                             <?php else: ?>
-                                <p>
-                                    As a verified technical specialist on Creda, I partner with businesses and individual project creators to architect, build, and deploy reliable digital solutions. My approach emphasizes robust clean code, automated milestone testing, zero security oversights, and seamless milestone-based delivery.
-                                </p>
-                                <p>
-                                    Whether you require a full-stack web application, high-volume transactional API integrations, or modern frontend design engineering, every project is executed under Creda's legally binding escrow framework to guarantee complete peace of mind.
+                                <p class="text-slate-400 italic">
+                                    No professional overview provided yet.
                                 </p>
                             <?php endif; ?>
                         </div>
@@ -372,21 +383,32 @@ require_once __DIR__ . '/components/head.php';
                                 <p class="text-xs text-slate-500">Validated through Creda technical benchmarking</p>
                             </div>
                             <div class="self-start sm:self-auto shrink-0">
-                                <span class="inline-flex items-center gap-1 text-xs font-bold text-[#1952E1] bg-blue-50 px-2.5 py-1 rounded-[3px] border border-blue-200/70">
-                                    <i class="ph-bold ph-check-circle"></i>
-                                    <span>Score: <?= $assessment_score ?>% (Passed)</span>
-                                </span>
+                                <?php if ($assessment_score > 0): ?>
+                                    <span class="inline-flex items-center gap-1 text-xs font-bold text-[#1952E1] bg-blue-50 px-2.5 py-1 rounded-[3px] border border-blue-200/70">
+                                        <i class="ph-bold ph-check-circle"></i>
+                                        <span>Score: <?= $assessment_score ?>% (Passed)</span>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center gap-1 text-xs font-bold text-slate-500 bg-slate-50 px-2.5 py-1 rounded-[3px] border border-slate-200">
+                                        <i class="ph-bold ph-hourglass"></i>
+                                        <span>Pending Assessment</span>
+                                    </span>
+                                <?php endif; ?>
                             </div>
                         </div>
 
                         <!-- Clean Monochromatic Skill Tags -->
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <?php foreach ($skills_list as $skill): ?>
-                                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-[#1952E1] text-slate-700 hover:text-[#1952E1] text-xs font-semibold rounded-[3px] transition-colors cursor-default group">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#1952E1]"></span>
-                                    <span><?= htmlspecialchars($skill) ?></span>
-                                </span>
-                            <?php endforeach; ?>
+                            <?php if (empty($skills_list)): ?>
+                                <span class="text-xs text-slate-400 italic py-1">No verified skills listed yet.</span>
+                            <?php else: ?>
+                                <?php foreach ($skills_list as $skill): ?>
+                                    <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-[#1952E1] text-slate-700 hover:text-[#1952E1] text-xs font-semibold rounded-[3px] transition-colors cursor-default group">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-[#1952E1]"></span>
+                                        <span><?= htmlspecialchars($skill) ?></span>
+                                    </span>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Footnote -->
@@ -508,71 +530,57 @@ require_once __DIR__ . '/components/head.php';
                         <!-- Feedback Items Stream -->
                         <div class="space-y-4 divide-y divide-slate-100">
                             
-                            <!-- Review Card 1 -->
-                            <div class="pt-3 first:pt-0 space-y-2.5">
-                                <div class="flex items-start justify-between gap-2.5">
-                                    <div class="flex items-center gap-2.5 min-w-0">
-                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center shrink-0">
-                                            DO
-                                        </div>
-                                        <div class="min-w-0">
-                                            <div class="flex items-center gap-2 flex-wrap">
-                                                <span class="font-bold text-xs text-slate-900">David Olanrewaju</span>
-                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80 shrink-0">
-                                                    <i class="ph-fill ph-check-circle text-xs text-[#1952E1]"></i>
-                                                    <span>Verified Escrow Hire</span>
-                                                </span>
+                            <?php if (empty($reviews)): ?>
+                                <div class="py-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-[3px]">
+                                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center mx-auto mb-2 text-slate-300 shadow-sm border border-slate-100">
+                                        <i class="ph-bold ph-star text-lg"></i>
+                                    </div>
+                                    <h3 class="text-[13px] font-bold text-slate-700">No Reviews Yet</h3>
+                                    <p class="text-[11px] text-slate-500 mt-1 max-w-[250px] mx-auto">This specialist has not received any escrow reviews yet.</p>
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($reviews as $review): 
+                                    $client_initials = strtoupper(substr($review['client_name'], 0, 2));
+                                    $rating_val = number_format((float)$review['rating'], 1);
+                                    $payout = number_format((float)$review['total_amount']);
+                                ?>
+                                    <div class="pt-4 first:pt-0 space-y-2.5">
+                                        <div class="flex items-start justify-between gap-2.5">
+                                            <div class="flex items-center gap-2.5 min-w-0">
+                                                <?php if (!empty($review['client_avatar'])): ?>
+                                                    <img src="<?= htmlspecialchars($review['client_avatar']) ?>" alt="Avatar" class="w-8 h-8 rounded-[3px] object-cover shrink-0 bg-slate-100">
+                                                <?php else: ?>
+                                                    <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center shrink-0">
+                                                        <?= htmlspecialchars($client_initials) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="min-w-0">
+                                                    <div class="flex items-center gap-2 flex-wrap">
+                                                        <span class="font-bold text-xs text-slate-900"><?= htmlspecialchars($review['client_name']) ?></span>
+                                                        <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80 shrink-0">
+                                                            <i class="ph-fill ph-check-circle text-xs text-[#1952E1]"></i>
+                                                            <span>Verified Escrow Hire</span>
+                                                        </span>
+                                                    </div>
+                                                    <span class="text-[10px] text-slate-400 block truncate"><?= htmlspecialchars($review['contract_title'] ?: 'Escrow Project') ?></span>
+                                                </div>
                                             </div>
-                                            <span class="text-[10px] text-slate-400 block truncate">Chief Technology Officer • FinTech Project</span>
-                                        </div>
-                                    </div>
-                                    <div class="text-slate-900 text-xs font-black shrink-0">
-                                        5.0 <span class="text-slate-400 font-normal">/ 5.0</span>
-                                    </div>
-                                </div>
-
-                                <p class="text-xs text-slate-600 leading-relaxed pl-0 sm:pl-10">
-                                    "Exceptional communication, clean architectural patterns, and adherence to milestones. The database queries and backend APIs were thoroughly documented and delivered 2 days ahead of schedule. We will definitely rehire for subsequent milestones."
-                                </p>
-
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] text-slate-400 pl-0 sm:pl-10 pt-1">
-                                    <span class="font-medium text-slate-600">Contract: <strong class="text-slate-800">₦180,000 Milestone Payout</strong></span>
-                                    <span>Completed 2 weeks ago</span>
-                                </div>
-                            </div>
-
-                            <!-- Review Card 2 -->
-                            <div class="pt-4 space-y-2.5">
-                                <div class="flex items-start justify-between gap-2.5">
-                                    <div class="flex items-center gap-2.5 min-w-0">
-                                        <div class="w-8 h-8 rounded-[3px] bg-slate-100 text-slate-800 font-black text-xs flex items-center justify-center shrink-0">
-                                            TF
-                                        </div>
-                                        <div class="min-w-0">
-                                            <div class="flex items-center gap-2 flex-wrap">
-                                                <span class="font-bold text-xs text-slate-900">Tolulope F.</span>
-                                                <span class="inline-flex items-center gap-1 text-[10px] text-[#1952E1] bg-blue-50 px-1.5 py-0.2 rounded-[2px] font-bold border border-blue-200/80 shrink-0">
-                                                    <i class="ph-fill ph-check-circle text-xs text-[#1952E1]"></i>
-                                                    <span>Verified Escrow Hire</span>
-                                                </span>
+                                            <div class="text-slate-900 text-xs font-black shrink-0">
+                                                <?= $rating_val ?> <span class="text-slate-400 font-normal">/ 5.0</span>
                                             </div>
-                                            <span class="text-[10px] text-slate-400 block truncate">Founder & Product Lead</span>
+                                        </div>
+
+                                        <p class="text-xs text-slate-600 leading-relaxed pl-0 sm:pl-10">
+                                            "<?= nl2br(htmlspecialchars($review['review_text'])) ?>"
+                                        </p>
+
+                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] text-slate-400 pl-0 sm:pl-10 pt-1">
+                                            <span class="font-medium text-slate-600">Contract: <strong class="text-slate-800">₦<?= $payout ?> Milestone Payout</strong></span>
+                                            <span><?= date('M j, Y', strtotime($review['created_at'])) ?></span>
                                         </div>
                                     </div>
-                                    <div class="text-slate-900 text-xs font-black shrink-0">
-                                        5.0 <span class="text-slate-400 font-normal">/ 5.0</span>
-                                    </div>
-                                </div>
-
-                                <p class="text-xs text-slate-600 leading-relaxed pl-0 sm:pl-10">
-                                    "Super sharp technical execution. Implemented our webhook handlers and payment processing gateway with zero bugs. Revisions were incorporated within a few hours."
-                                </p>
-
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] text-slate-400 pl-0 sm:pl-10 pt-1">
-                                    <span class="font-medium text-slate-600">Contract: <strong class="text-slate-800">₦95,000 Milestone Payout</strong></span>
-                                    <span>Completed 1 month ago</span>
-                                </div>
-                            </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
 
                         </div>
 
