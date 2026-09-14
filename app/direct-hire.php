@@ -24,7 +24,7 @@ if (!$provider_id) {
 }
 
 // Fetch Provider Info
-$sql = "SELECT id, full_name, title FROM users WHERE id = ? LIMIT 1";
+$sql = "SELECT u.id, u.full_name, tp.title FROM users u LEFT JOIN talent_profiles tp ON u.id = tp.user_id WHERE u.id = ? LIMIT 1";
 $stmt = $db->prepare($sql);
 $stmt->execute([$provider_id]);
 $provider = $stmt->fetch(PDO::FETCH_ASSOC);
