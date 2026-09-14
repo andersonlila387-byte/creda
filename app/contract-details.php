@@ -100,7 +100,7 @@ if ($status === 'awaiting_requirements') {
     <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
         <?php include __DIR__ . '/components/header.php'; ?>
 
-        <div class="p-4 md:p-8 pt-20 md:pt-8 max-w-5xl mx-auto w-full">
+        <div class="p-4 md:p-8 pt-20 pb-36 md:pt-8 md:pb-8 max-w-5xl mx-auto w-full">
             <!-- Header Section -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-200">
                 <div>
@@ -288,3 +288,4 @@ if ($status === 'awaiting_requirements') {
     </main>
 </body>
 </html>
+

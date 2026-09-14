@@ -13,7 +13,7 @@ require_once __DIR__ . '/controllers/DashboardController.php';
     <?php include __DIR__ . '/components/header.php'; ?>
 
     <!-- Scrollable Content Area -->
-    <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 md:pb-6 lg:pb-12 scroll-smooth">
+    <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-36 md:pb-6 lg:pb-12 scroll-smooth">
         
         <!-- 2-COLUMN SPLIT DASHBOARD LAYOUT (Column 1 is Wider than Column 2) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 w-full gap-4 sm:gap-6 lg:gap-8 items-start">
@@ -398,3 +398,4 @@ require_once __DIR__ . '/controllers/DashboardController.php';
 </div> 
 
 <?php include __DIR__ . '/components/footer.php'; ?>
+

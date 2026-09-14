@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 /**
  * Scriptly Escrow - Package Details (Fiverr-style Gig Page)
  */
@@ -74,7 +74,7 @@ $active_tab = 'services';
     <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
         <?php include __DIR__ . '/components/header.php'; ?>
 
-        <div class="p-4 md:p-8 pt-20 md:pt-8 max-w-6xl mx-auto w-full">
+        <div class="p-4 md:p-8 pt-20 pb-36 md:pt-8 md:pb-8 max-w-6xl mx-auto w-full">
             
             <!-- Breadcrumbs -->
             <nav class="flex text-[11px] font-bold text-slate-400 mb-6">
@@ -184,7 +184,7 @@ $active_tab = 'services';
                             <div id="tier-<?php echo $tier['tier_type']; ?>" class="tier-content <?php echo $index === 0 ? 'active' : ''; ?>">
                                 <div class="flex justify-between items-start mb-4">
                                     <h3 class="text-lg font-bold text-slate-900"><?php echo htmlspecialchars($tier['name']); ?></h3>
-                                    <div class="text-2xl font-black text-slate-900">₦<?php echo number_format($tier['price']); ?></div>
+                                    <div class="text-2xl font-black text-slate-900">?<?php echo number_format($tier['price']); ?></div>
                                 </div>
                                 
                                 <p class="text-sm text-slate-600 mb-6 h-16 overflow-hidden"><?php echo htmlspecialchars($tier['description']); ?></p>
@@ -202,7 +202,7 @@ $active_tab = 'services';
                                 
                                 <!-- Placeholder redirect to checkout for MVP phase -->
                                 <a href="checkout.php?package_id=<?php echo $package_id; ?>&tier=<?php echo $tier['tier_type']; ?>" class="block w-full py-3.5 bg-[#1952E1] hover:bg-blue-700 text-white text-center font-bold text-sm rounded-[3px] transition-colors shadow-md">
-                                    Continue (₦<?php echo number_format($tier['price']); ?>)
+                                    Continue (?<?php echo number_format($tier['price']); ?>)
                                 </a>
                             </div>
                             <?php endforeach; ?>
@@ -231,3 +231,4 @@ $active_tab = 'services';
     </script>
 </body>
 </html>
+
