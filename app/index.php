@@ -281,7 +281,7 @@ require_once __DIR__ . '/controllers/DashboardController.php';
                                 <span class="text-[11px] font-semibold text-slate-500">
                                     Budget: <?= $proj['budget'] > 0 ? '$' . number_format($proj['budget'], 2) : 'Negotiable' ?>
                                 </span>
-                                <a href="contract-details/<?= $proj['slug'] ?>" class="text-[11px] font-bold text-[#1952E1] hover:underline flex items-center gap-1">
+                                <a href="project-details.php?slug=<?= urlencode($proj['slug']) ?>" class="text-[11px] font-bold text-[#1952E1] hover:underline flex items-center gap-1">
                                     <span>View Details</span>
                                     <i class="ph-bold ph-caret-right text-[10px]"></i>
                                 </a>

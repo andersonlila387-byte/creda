@@ -241,7 +241,7 @@ require_once __DIR__ . '/controllers/MyProjectsController.php';
                                     <div class="flex flex-col">
                                         <span class="text-xs font-bold text-slate-900"><?= $proj['proposal_count'] ?> Candidate Proposals</span>
                                     </div>
-                                    <a href="review-proposals/<?= $proj['slug'] ?>" class="text-xs font-bold bg-[#0A2342] hover:bg-black text-white px-3 py-1.5 rounded-[3px] transition-colors shrink-0">
+                                    <a href="review-proposals.php?slug=<?= urlencode($proj['slug']) ?>" class="text-xs font-bold bg-[#0A2342] hover:bg-black text-white px-3 py-1.5 rounded-[3px] transition-colors shrink-0">
                                         Review Bids
                                     </a>
                                 </div>
