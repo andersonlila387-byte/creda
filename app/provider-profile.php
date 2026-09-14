@@ -118,7 +118,7 @@ require_once __DIR__ . '/components/head.php';
     <?php include __DIR__ . '/components/header.php'; ?>
 
     <!-- Scrollable Profile Content -->
-    <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-[80px] sm:pb-32 md:pb-10 lg:pb-12 scroll-smooth">
+    <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 mobile-bottom-space sm:pb-32 md:pb-10 lg:pb-12 scroll-smooth">
         
         <div class="max-w-7xl mx-auto space-y-6">
 
@@ -876,4 +876,5 @@ function selectProjectTier(btn, tierName) {
     showToast('Selected: ' + tierName);
 }
 </script>
+
 

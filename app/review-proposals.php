@@ -113,7 +113,7 @@ if (\['REQUEST_METHOD'] === 'POST' && isset(\['accept_proposal_id'])) {
         
         <?php include __DIR__ . '/components/header.php'; ?>
 
-        <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-[80px] md:pb-6 lg:pb-12 scroll-smooth">
+        <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 mobile-bottom-space md:pb-6 lg:pb-12 scroll-smooth">
             <div class="max-w-5xl mx-auto space-y-5">
 
                 <?php if (isset(\)): ?>
@@ -238,5 +238,6 @@ if (\['REQUEST_METHOD'] === 'POST' && isset(\['accept_proposal_id'])) {
     </main>
 </body>
 </html>
+
 
 

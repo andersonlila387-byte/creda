@@ -170,6 +170,13 @@ $og_image_url = $protocol . "://" . $host . $base_path . '/assets/hero_bg.jpg';
         .no-scrollbar::-webkit-scrollbar {
             display: none; /* Chrome, Safari and Opera */
         }
+
+        /* Mobile Bottom Nav Clearance */
+        @media (max-width: 767px) {
+            .mobile-bottom-space {
+                padding-bottom: 85px !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-[#EFF2F7] text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900 overflow-hidden">

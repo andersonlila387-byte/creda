@@ -74,7 +74,7 @@ if (\['REQUEST_METHOD'] === 'POST') {
     <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
         <?php include __DIR__ . '/components/header.php'; ?>
 
-        <div class="p-4 md:p-8 pt-20 pb-[80px] md:pt-8 md:pb-8 max-w-3xl mx-auto w-full">
+        <div class="p-4 md:p-8 pt-20 mobile-bottom-space md:pt-8 md:pb-8 max-w-3xl mx-auto w-full">
             
             <div class="mb-6">
                 <a href="project-details.php?slug=<?= urlencode(\['slug']) ?>" class="text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1 w-max">
@@ -123,5 +123,6 @@ if (\['REQUEST_METHOD'] === 'POST') {
     </main>
 </body>
 </html>
+
 
 

@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
         <?php include __DIR__ . '/components/header.php'; ?>
 
-        <div class="p-4 md:p-8 pt-20 pb-[80px] md:pt-8 md:pb-8 max-w-4xl mx-auto w-full">
+        <div class="p-4 md:p-8 pt-20 mobile-bottom-space md:pt-8 md:pb-8 max-w-4xl mx-auto w-full">
             <h1 class="text-2xl font-black text-slate-900 mb-6">Complete Your Order</h1>
             
             <?php if (isset($error)): ?>
@@ -171,5 +171,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
 </body>
 </html>
+
 
 
