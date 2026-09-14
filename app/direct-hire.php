@@ -64,35 +64,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fee = $budget * 0.05; // 5% escrow fee
         $total = $budget + $fee;
         
-        try {
-            $db->beginTransaction();
+        // Handle Optional File Upload
+        $file_url = null;
+        $original_file_name = null;
+        if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+            $file_tmp = $_FILES['attachment']['tmp_name'];
+            $original_file_name = basename($_FILES['attachment']['name']);
+            $file_size = $_FILES['attachment']['size'];
+            $file_ext = strtolower(pathinfo($original_file_name, PATHINFO_EXTENSION));
             
-            // 1. Create Contract
-            $deadline_at = date('Y-m-d H:i:s', strtotime("+{$deadline_days} days"));
-            $stmt_c = $db->prepare("INSERT INTO contracts (client_id, provider_id, package_id, title, total_amount, status, deadline_at, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, 'active', ?, NOW(), NOW())");
-            $stmt_c->execute([$client_id, $provider_id, $project_title, $total, $deadline_at]);
-            $contract_id = $db->lastInsertId();
+            $max_size = 25 * 1024 * 1024; // 25MB
+            $allowed_exts = ['pdf', 'doc', 'docx', 'txt', 'zip', 'png', 'jpg', 'jpeg', 'fig', 'xd', 'csv', 'xlsx'];
+            
+            if ($file_size > $max_size) {
+                $error = "The uploaded file is too large. Maximum size is 25MB.";
+            } elseif (!in_array($file_ext, $allowed_exts, true)) {
+                $error = "File format not supported. Allowed formats: PDF, DOCX, ZIP, TXT, PNG, JPG.";
+            } else {
+                $upload_dir = __DIR__ . '/../assets/uploads/contracts/';
+                if (!is_dir($upload_dir)) {
+                    @mkdir($upload_dir, 0777, true);
+                }
+                $safe_name = 'brief_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $file_ext;
+                $dest_path = $upload_dir . $safe_name;
+                if (move_uploaded_file($file_tmp, $dest_path)) {
+                    $file_url = '/assets/uploads/contracts/' . $safe_name;
+                }
+            }
+        }
 
-            // 2. Create Escrow Transaction (Mock Funded)
-            $stmt_e = $db->prepare("INSERT INTO escrow_transactions (contract_id, amount, fee_amount, status) VALUES (?, ?, ?, 'funded')");
-            $stmt_e->execute([$contract_id, $budget, $fee]);
-            
-            // 3. Save requirements as first message
-            if (!empty($description)) {
-                $stmt_m = $db->prepare("INSERT INTO messages (contract_id, sender_id, receiver_id, content) VALUES (?, ?, ?, ?)");
-                $stmt_m->execute([$contract_id, $client_id, $provider_id, "Project Scope & Requirements:\n\n" . $description]);
+        if (empty($error)) {
+            try {
+                $db->beginTransaction();
+                
+                // 1. Create Contract
+                $deadline_at = date('Y-m-d H:i:s', strtotime("+{$deadline_days} days"));
+                $stmt_c = $db->prepare("INSERT INTO contracts (client_id, provider_id, package_id, title, total_amount, status, deadline_at, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, 'active', ?, NOW(), NOW())");
+                $stmt_c->execute([$client_id, $provider_id, $project_title, $total, $deadline_at]);
+                $contract_id = $db->lastInsertId();
+
+                // 2. Create Escrow Transaction (Mock Funded)
+                $stmt_e = $db->prepare("INSERT INTO escrow_transactions (contract_id, amount, fee_amount, status) VALUES (?, ?, ?, 'funded')");
+                $stmt_e->execute([$contract_id, $budget, $fee]);
+                
+                // 3. Record attached brief in requirements answers
+                if (!empty($file_url)) {
+                    $stmt_ans = $db->prepare("INSERT INTO contract_requirements_answers (contract_id, requirement_id, answer_text, file_path, submitted_at) VALUES (?, 0, ?, ?, NOW())");
+                    $stmt_ans->execute([$contract_id, "Project brief & attached files: " . $original_file_name, $file_url]);
+                }
+
+                // 4. Save scope & attachments into direct chat
+                if (!empty($description) || !empty($file_url)) {
+                    $msg_text = "Project Scope & Requirements:\n\n" . $description;
+                    if (!empty($file_url)) {
+                        $msg_text .= "\n\nAttached Brief: " . $original_file_name . "\nLink: " . $file_url;
+                    }
+                    $stmt_m = $db->prepare("INSERT INTO messages (sender_id, receiver_id, content, is_read) VALUES (?, ?, ?, 0)");
+                    $stmt_m->execute([$client_id, $provider_id, $msg_text]);
+                }
+                
+                $db->commit();
+                
+                // Redirect to Contract Details
+                header("Location: contract-details.php?id=" . $contract_id . "&success=direct_hire");
+                exit;
+            } catch (Exception $e) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+                $error = "Booking failed: " . $e->getMessage();
             }
-            
-            $db->commit();
-            
-            // Redirect to Contract Details
-            header("Location: contract-details.php?id=" . $contract_id . "&success=direct_hire");
-            exit;
-        } catch (Exception $e) {
-            if ($db->inTransaction()) {
-                $db->rollBack();
-            }
-            $error = "Booking failed: " . $e->getMessage();
         }
     }
 }
@@ -138,7 +179,7 @@ require_once __DIR__ . '/components/head.php';
                         Send Direct Offer to <?= $provider_name ?>
                     </h1>
                     <p class="text-xs text-slate-500 mt-1">
-                        Define your deliverables and budget. Funds are held safely in Scriptly Escrow until you approve the final delivery.
+                        Define your deliverables, attachments, and budget. Funds are held safely in Scriptly Escrow until you approve the final delivery.
                     </p>
                 </div>
             </div>
@@ -151,7 +192,7 @@ require_once __DIR__ . '/components/head.php';
             <?php endif; ?>
 
             <!-- 2-COLUMN BOOKING GRID -->
-            <form method="POST" id="direct-hire-form" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <form method="POST" id="direct-hire-form" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
                 <!-- LEFT COLUMN: Contract Specification Form (7 Cols) -->
                 <div class="lg:col-span-7 space-y-6">
@@ -172,6 +213,7 @@ require_once __DIR__ . '/components/head.php';
                                 type="text" 
                                 name="title" 
                                 required 
+                                value="<?= htmlspecialchars($_POST['title'] ?? '') ?>"
                                 placeholder="e.g. Build Custom React Native Mobile Screen Flow" 
                                 class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] transition-all"
                             >
@@ -184,18 +226,62 @@ require_once __DIR__ . '/components/head.php';
                             </label>
                             <textarea 
                                 name="description" 
-                                rows="6" 
+                                rows="5" 
                                 required
                                 placeholder="Describe the project objectives, required deliverables, technology stack, assets provided, and any specific expectations..." 
                                 class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] p-3.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] transition-all"
-                            ></textarea>
+                            ><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
                             <p class="text-[11px] text-slate-400 mt-1">
                                 This will be recorded on the official contract agreement and sent directly to the specialist.
                             </p>
                         </div>
 
-                        <!-- 3. Budget & Delivery Timeframe Row -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <!-- 3. File Upload Dropzone -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                                Project Brief & Reference Attachments <span class="text-xs font-normal text-slate-400">(Optional)</span>
+                            </label>
+                            
+                            <div class="relative border-2 border-dashed border-slate-200 hover:border-[#1952E1] bg-slate-50/50 hover:bg-white rounded-[3px] p-5 text-center transition-all group" id="upload-dropzone">
+                                <input 
+                                    type="file" 
+                                    name="attachment" 
+                                    id="attachment-input" 
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                    accept=".pdf,.doc,.docx,.txt,.zip,.png,.jpg,.jpeg,.fig,.xd,.csv,.xlsx"
+                                >
+                                
+                                <div id="upload-idle-state" class="space-y-2">
+                                    <div class="w-10 h-10 rounded-full bg-blue-50 text-[#1952E1] flex items-center justify-center mx-auto transition-transform group-hover:scale-110">
+                                        <i class="ph-bold ph-cloud-arrow-up text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-800">
+                                            <span class="text-[#1952E1] hover:underline">Click to upload brief</span> or drag and drop
+                                        </p>
+                                        <p class="text-[11px] text-slate-400 mt-0.5">PDF, DOCX, ZIP, PNG, JPG up to 25MB</p>
+                                    </div>
+                                </div>
+
+                                <div id="upload-file-selected" class="hidden items-center justify-between bg-white border border-slate-200 rounded-[3px] p-3 text-left">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-8 h-8 rounded-[3px] bg-blue-50 text-[#1952E1] flex items-center justify-center shrink-0">
+                                            <i class="ph-bold ph-file-text text-base"></i>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <p class="text-xs font-bold text-slate-800 truncate" id="selected-file-name">filename.pdf</p>
+                                            <p class="text-[10px] text-slate-400" id="selected-file-size">1.2 MB</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="remove-file-btn" class="text-slate-400 hover:text-rose-600 p-1.5 transition-colors relative z-20 cursor-pointer" title="Remove file">
+                                        <i class="ph-bold ph-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Budget & Delivery Timeframe Row -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1.5">
                                     Agreed Project Budget (₦) <span class="text-rose-500">*</span>
@@ -209,6 +295,7 @@ require_once __DIR__ . '/components/head.php';
                                         required 
                                         min="1000" 
                                         step="500" 
+                                        value="<?= htmlspecialchars($_POST['budget'] ?? '') ?>"
                                         placeholder="50000" 
                                         class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] pl-8 pr-3.5 py-2.5 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] transition-all"
                                     >
@@ -224,11 +311,11 @@ require_once __DIR__ . '/components/head.php';
                                     name="deadline_days" 
                                     class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] px-3.5 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:border-[#1952E1] transition-all"
                                 >
-                                    <option value="3">3 Days (Fast delivery)</option>
-                                    <option value="7" selected>7 Days (Standard turnaround)</option>
-                                    <option value="14">14 Days (2 Weeks)</option>
-                                    <option value="21">21 Days (3 Weeks)</option>
-                                    <option value="30">30 Days (1 Month)</option>
+                                    <option value="3" <?= (($_POST['deadline_days'] ?? '') === '3') ? 'selected' : '' ?>>3 Days (Fast delivery)</option>
+                                    <option value="7" <?= (($_POST['deadline_days'] ?? '7') === '7') ? 'selected' : '' ?>>7 Days (Standard turnaround)</option>
+                                    <option value="14" <?= (($_POST['deadline_days'] ?? '') === '14') ? 'selected' : '' ?>>14 Days (2 Weeks)</option>
+                                    <option value="21" <?= (($_POST['deadline_days'] ?? '') === '21') ? 'selected' : '' ?>>21 Days (3 Weeks)</option>
+                                    <option value="30" <?= (($_POST['deadline_days'] ?? '') === '30') ? 'selected' : '' ?>>30 Days (1 Month)</option>
                                 </select>
                                 <p class="text-[11px] text-slate-400 mt-1">Can be extended mutually if needed</p>
                             </div>
@@ -368,6 +455,7 @@ require_once __DIR__ . '/components/head.php';
 <?php include __DIR__ . '/components/footer.php'; ?>
 
 <script>
+    // Live Financial Calculations
     const budgetInput = document.getElementById('budget-input');
     const subtotalEl = document.getElementById('summary-subtotal');
     const feeEl = document.getElementById('summary-fee');
@@ -386,5 +474,45 @@ require_once __DIR__ . '/components/head.php';
     if (budgetInput) {
         budgetInput.addEventListener('input', updateCalculations);
         updateCalculations();
+    }
+
+    // File Upload Interactive Dropzone
+    const attachmentInput = document.getElementById('attachment-input');
+    const idleState = document.getElementById('upload-idle-state');
+    const selectedState = document.getElementById('upload-file-selected');
+    const fileNameEl = document.getElementById('selected-file-name');
+    const fileSizeEl = document.getElementById('selected-file-size');
+    const removeBtn = document.getElementById('remove-file-btn');
+
+    function formatBytes(bytes, decimals = 1) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    if (attachmentInput) {
+        attachmentInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                fileNameEl.innerText = file.name;
+                fileSizeEl.innerText = formatBytes(file.size);
+                idleState.classList.add('hidden');
+                selectedState.classList.remove('hidden');
+                selectedState.classList.add('flex');
+            }
+        });
+    }
+
+    if (removeBtn) {
+        removeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            attachmentInput.value = '';
+            selectedState.classList.add('hidden');
+            selectedState.classList.remove('flex');
+            idleState.classList.remove('hidden');
+        });
     }
 </script>
