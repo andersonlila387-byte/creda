@@ -10,7 +10,8 @@ $db = getDBConnection();
 
 // Require Login
 $client_id = $_SESSION['user_id'] ?? null;
-if (!$client_id || ($_SESSION['primary_role'] ?? 'client') !== 'client') {
+$active_role = $_SESSION['active_role_mode'] ?? ($_SESSION['primary_role'] ?? 'client');
+if (!$client_id || $active_role !== 'client') {
     header("Location: ../login.php?redirect=direct-hire.php?" . http_build_query($_GET));
     exit;
 }
