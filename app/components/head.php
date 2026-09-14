@@ -174,7 +174,7 @@ $og_image_url = $protocol . "://" . $host . $base_path . '/assets/hero_bg.jpg';
         /* Mobile Bottom Nav Clearance */
         @media (max-width: 767px) {
             .mobile-bottom-space {
-                padding-bottom: 85px !important;
+                padding-bottom: 150px !important;
             }
         }
     </style>
