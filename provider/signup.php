@@ -10,14 +10,6 @@ $_SESSION['auth_role_preference'] = 'provider';
 
 // Active session verification & automatic redirect
 if (!empty($_SESSION['user_logged_in']) && !empty($_SESSION['user_id'])) {
-    if (empty($_SESSION['user_verified'])) {
-        header("Location: " . getPortalUrl('provider', 'verify-email.php'));
-        exit;
-    }
-    if (isset($_SESSION['onboarding_completed']) && !$_SESSION['onboarding_completed']) {
-        header("Location: " . getPortalUrl('client', 'onboarding.php'));
-        exit;
-    }
     if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'provider') {
         if (!empty($_SESSION['is_verified_pro'])) {
             header("Location: " . getPortalUrl('provider', 'app/index.php'));
@@ -30,8 +22,7 @@ if (!empty($_SESSION['user_logged_in']) && !empty($_SESSION['user_id'])) {
         }
         exit;
     }
-    header("Location: " . getPortalUrl('client', 'app/index.php'));
-    exit;
+    // Logged-in clients can proceed to register/apply as a provider
 }
 ?>
 <!DOCTYPE html>
