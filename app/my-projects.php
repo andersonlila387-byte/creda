@@ -266,11 +266,11 @@ require_once __DIR__ . '/controllers/MyProjectsController.php';
                             </div>
                             <div class="flex items-center gap-2 w-full sm:w-auto">
                                 <?php if ($proj['status'] === 'open'): ?>
-                                    <a href="edit-listing/<?= $proj['slug'] ?>" class="flex-1 sm:flex-none text-center text-xs font-bold bg-white text-[#1952E1] border border-[#1952E1] hover:bg-blue-50 px-4 py-2 rounded-[3px] transition-colors shadow-2xs">
+                                    <a href="edit-listing.php?slug=<?= urlencode($proj['slug']) ?>" class="flex-1 sm:flex-none text-center text-xs font-bold bg-white text-[#1952E1] border border-[#1952E1] hover:bg-blue-50 px-4 py-2 rounded-[3px] transition-colors shadow-2xs">
                                         Edit / Delete
                                     </a>
                                 <?php else: ?>
-                                    <a href="contract-details/<?= $proj['slug'] ?>" class="flex-1 sm:flex-none text-center text-xs font-bold bg-white text-[#1952E1] border border-[#1952E1] hover:bg-blue-50 px-4 py-2 rounded-[3px] transition-colors shadow-2xs">
+                                    <a href="<?= !empty($proj['contract_id']) ? 'contract-details.php?id=' . $proj['contract_id'] : 'project-details.php?slug=' . urlencode($proj['slug']) ?>" class="flex-1 sm:flex-none text-center text-xs font-bold bg-white text-[#1952E1] border border-[#1952E1] hover:bg-blue-50 px-4 py-2 rounded-[3px] transition-colors shadow-2xs">
                                         Manage Contract
                                     </a>
                                 <?php endif; ?>

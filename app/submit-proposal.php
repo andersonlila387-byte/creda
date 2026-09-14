@@ -12,7 +12,7 @@ $db = getDBConnection();
 
 // Require Provider Login
 $user_id = $_SESSION['user_id'] ?? null;
-$user_role = $_SESSION['primary_role'] ?? 'client';
+$user_role = $_SESSION['active_role_mode'] ?? ($_SESSION['primary_role'] ?? 'client');
 $project_id = $_GET['project_id'] ?? null;
 
 if (!$user_id || $user_role !== 'provider' || !$project_id) {

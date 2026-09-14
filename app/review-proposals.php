@@ -12,7 +12,8 @@ $db = getDBConnection();
 
 // Require Client Login
 $user_id = $_SESSION['user_id'] ?? null;
-if (!$user_id || ($_SESSION['primary_role'] ?? 'client') !== 'client') {
+$active_role = $_SESSION['active_role_mode'] ?? ($_SESSION['primary_role'] ?? 'client');
+if (!$user_id || $active_role !== 'client') {
     header("Location: ../login.php?redirect=review-proposals.php?" . http_build_query($_GET));
     exit;
 }

@@ -126,7 +126,7 @@ require_once __DIR__ . '/controllers/DashboardController.php';
                                     <a href="messages.php" class="text-[11px] font-bold text-slate-700 hover:text-slate-900 px-3 py-1.5 rounded-[3px] bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
                                         Chat
                                     </a>
-                                    <a href="contract-details/<?= $job['slug'] ?>" class="text-[11px] font-bold bg-[#1952E1] text-white hover:bg-blue-700 px-3.5 py-1.5 rounded-[3px] transition-colors shadow-sm">
+                                    <a href="<?= !empty($job['contract_id']) ? 'contract-details.php?id=' . $job['contract_id'] : 'project-details.php?slug=' . urlencode($job['slug']) ?>" class="text-[11px] font-bold bg-[#1952E1] text-white hover:bg-blue-700 px-3.5 py-1.5 rounded-[3px] transition-colors shadow-sm">
                                         View Contract
                                     </a>
                                 </div>

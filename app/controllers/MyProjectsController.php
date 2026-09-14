@@ -20,6 +20,7 @@ if (!$user_id) {
 $stmt = $db->prepare("
     SELECT p.*, 
            c.full_name as client_name,
+           (SELECT c2.id FROM contracts c2 WHERE c2.client_id = p.client_id AND c2.title = p.title ORDER BY c2.id DESC LIMIT 1) as contract_id,
            (SELECT COUNT(*) FROM proposals pr WHERE pr.project_id = p.id) as proposal_count,
            (SELECT u.full_name FROM proposals pr JOIN users u ON pr.provider_id = u.id WHERE pr.project_id = p.id AND pr.status = 'accepted' LIMIT 1) as hired_provider_name
     FROM projects p

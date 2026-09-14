@@ -21,12 +21,13 @@ if (!$contract_id) {
 
 // Fetch Contract Details
 $sql = "
-    SELECT c.*, p.title as package_title, 
-           u.full_name as provider_name, u.avatar_url as provider_avatar,
+    SELECT c.*, COALESCE(p.title, c.title) as package_title, 
+           u.full_name as provider_name, COALESCE(u.avatar_url, tp.avatar_url) as provider_avatar,
            (SELECT COUNT(*) FROM package_requirements WHERE package_id = c.package_id) as total_reqs
     FROM contracts c
-    JOIN packages p ON c.package_id = p.id
+    LEFT JOIN packages p ON c.package_id = p.id
     JOIN users u ON c.provider_id = u.id
+    LEFT JOIN talent_profiles tp ON u.id = tp.user_id
     WHERE c.id = ? AND c.client_id = ?
 ";
 $stmt = $db->prepare($sql);
@@ -264,8 +265,8 @@ if ($status === 'awaiting_requirements') {
                     <div class="bg-white border border-slate-200 rounded-[3px] p-6 shadow-sm flex flex-col items-center text-center">
                         <img src="<?php echo $contract['provider_avatar'] ?: '../assets/images/default-avatar.png'; ?>" class="w-20 h-20 rounded-full object-cover mb-4">
                         <h3 class="text-sm font-black text-slate-900"><?php echo htmlspecialchars($contract['provider_name']); ?></h3>
-                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-4">Provider</p>
-                        <a href="messages.php" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-[3px] transition-colors shadow-2xs border border-slate-200">Message Provider</a>
+                        <a href="messages.php?user=<?= $contract['provider_id'] ?>" class="w-full py-2 bg-[#1952E1] hover:bg-blue-700 text-white font-bold text-xs rounded-[3px] transition-colors shadow-2xs text-center block">Message Provider</a>
+                        <a href="disputes.php" class="w-full py-2 bg-slate-50 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-bold text-xs rounded-[3px] transition-colors shadow-2xs border border-slate-200 hover:border-rose-200 text-center block mt-2">Dispute Center</a>
                     </div>
                     
                     <!-- Contract Metadata -->

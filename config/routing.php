@@ -26,6 +26,7 @@ function get_allowed_client_scripts(): array {
         'contract-details.php',
         'provider-profile.php',
         'service-details.php',
+        'services.php',
         'post-project.php',
         'projects.php',
         'project-details.php',

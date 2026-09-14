@@ -19,7 +19,8 @@ if (!$user_id) {
 
 // 1. Fetch Active Projects/Jobs (Where the user is either the client or the provider and status is in_progress)
 $stmt = $db->prepare("
-    SELECT p.id, p.slug, p.title, p.status, p.created_at, u.full_name as client_name
+    SELECT p.id, p.slug, p.title, p.status, p.created_at, u.full_name as client_name,
+           (SELECT c.id FROM contracts c WHERE c.client_id = p.client_id AND c.title = p.title ORDER BY c.id DESC LIMIT 1) as contract_id
     FROM projects p
     LEFT JOIN users u ON p.client_id = u.id
     WHERE (p.client_id = :uid OR EXISTS (

@@ -6,32 +6,58 @@ require_once __DIR__ . '/../config/database.php';
 $db = getDBConnection();
 $user_id = $_SESSION['user_id'] ?? 1;
 
-// Fetch completed/accepted proposals to rate
-$p_stmt = $db->prepare("
-    SELECT p.id, p.title, pr.id as proposal_id, u.full_name as provider_name
-    FROM projects p
-    JOIN proposals pr ON pr.project_id = p.id AND pr.status = 'accepted'
-    JOIN users u ON u.id = pr.provider_id
-    WHERE p.client_id = ?
+// Fetch rateable contracts for this client
+$c_stmt = $db->prepare("
+    SELECT c.id as contract_id, c.title, c.provider_id, u.full_name as provider_name
+    FROM contracts c
+    JOIN users u ON c.provider_id = u.id
+    WHERE c.client_id = ?
+    ORDER BY c.created_at DESC
 ");
-$p_stmt->execute([$user_id]);
-$rateable_projects = $p_stmt->fetchAll(PDO::FETCH_ASSOC);
+$c_stmt->execute([$user_id]);
+$rateable_contracts = $c_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$preselected_contract_id = (int)($_GET['contract_id'] ?? 0);
+
+$error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $proposal_id = (int)($_POST['proposal_id'] ?? 0);
-    $rating = (int)($_POST['rating'] ?? 5);
+    $contract_id = (int)($_POST['contract_id'] ?? 0);
+    $rating = min(5, max(1, (float)($_POST['rating'] ?? 5)));
     $comment = trim($_POST['comment'] ?? '');
     
-    if ($proposal_id > 0) {
-        // Save review
-        $rev_stmt = $db->prepare("
-            INSERT INTO reviews (proposal_id, reviewer_id, rating, comment) 
-            VALUES (?, ?, ?, ?)
-        ");
-        $rev_stmt->execute([$proposal_id, $user_id, $rating, $comment]);
+    if ($contract_id > 0 && !empty($comment)) {
+        // Fetch contract provider
+        $stmt_check = $db->prepare("SELECT provider_id FROM contracts WHERE id = ? AND client_id = ? LIMIT 1");
+        $stmt_check->execute([$contract_id, $user_id]);
+        $provider_id = $stmt_check->fetchColumn();
         
-        header('Location: services.php?success=feedback');
-        exit;
+        if ($provider_id) {
+            try {
+                $rev_stmt = $db->prepare("
+                    INSERT INTO contract_reviews (contract_id, provider_id, client_id, rating, review_text, created_at) 
+                    VALUES (?, ?, ?, ?, ?, NOW())
+                ");
+                $rev_stmt->execute([$contract_id, $provider_id, $user_id, $rating, $comment]);
+                
+                // Recalculate provider rating in talent_profiles
+                $avg_stmt = $db->prepare("SELECT AVG(rating) as avg_r, COUNT(*) as cnt FROM contract_reviews WHERE provider_id = ?");
+                $avg_stmt->execute([$provider_id]);
+                $stats = $avg_stmt->fetch(PDO::FETCH_ASSOC);
+                if ($stats) {
+                    $db->prepare("UPDATE talent_profiles SET rating = ?, rating_count = ? WHERE user_id = ?")
+                       ->execute([$stats['avg_r'], $stats['cnt'], $provider_id]);
+                }
+                
+                header('Location: my-projects.php?msg=review_submitted');
+                exit;
+            } catch (Exception $e) {
+                $error = "Failed to submit review: " . $e->getMessage();
+            }
+        } else {
+            $error = "Contract not found or access denied.";
+        }
+    } else {
+        $error = "Please select a contract and provide review comments.";
     }
 }
 
@@ -53,18 +79,25 @@ require_once __DIR__ . '/components/head.php';
             <p class="text-xs sm:text-sm text-slate-500 mt-1">Submit your rating and comments to build transparency and reward quality talent.</p>
         </div>
 
+        <?php if (!empty($error)): ?>
+            <div class="p-3 bg-rose-50 border border-rose-200 rounded-[3px] text-xs font-bold text-rose-800 flex items-center gap-2">
+                <i class="ph-fill ph-warning-circle text-rose-600 text-sm shrink-0"></i>
+                <span><?= htmlspecialchars($error) ?></span>
+            </div>
+        <?php endif; ?>
+
         <!-- Form -->
         <div class="bg-white rounded-[3px] border border-slate-200/90 shadow-sm p-5 sm:p-6">
             <form method="POST" action="leave-feedback.php" class="space-y-4">
                 
                 <!-- Project Selection -->
                 <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Project / Collaborator</label>
-                    <select name="proposal_id" required class="w-full bg-slate-50 border border-slate-200 rounded-[3px] px-3 py-2.5 text-xs font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-[#1952E1]">
-                        <option value="">-- Select Completed Project --</option>
-                        <?php foreach ($rateable_projects as $proj): ?>
-                            <option value="<?= $proj['proposal_id'] ?>">
-                                <?= htmlspecialchars($proj['title']) ?> (with <?= htmlspecialchars($proj['provider_name']) ?>)
+                    <label class="block text-xs font-bold text-slate-700">Select Contract / Collaborator</label>
+                    <select name="contract_id" required class="w-full bg-slate-50 border border-slate-200 rounded-[3px] px-3 py-2.5 text-xs font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-[#1952E1]">
+                        <option value="">-- Select Completed Contract --</option>
+                        <?php foreach ($rateable_contracts as $c): ?>
+                            <option value="<?= $c['contract_id'] ?>" <?= ($preselected_contract_id === (int)$c['contract_id']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($c['title']) ?> (with <?= htmlspecialchars($c['provider_name']) ?>)
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -82,18 +115,18 @@ require_once __DIR__ . '/components/head.php';
                     </select>
                 </div>
 
-                <!-- Star Comment -->
+                <!-- Comment -->
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Feedback / Review Comments</label>
-                    <textarea name="comment" rows="4" required class="w-full bg-slate-50 border border-slate-200 rounded-[3px] p-3 text-xs font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-[#1952E1]" placeholder="Detail your experience with this candidate..."></textarea>
+                    <textarea name="comment" rows="4" required class="w-full bg-slate-50 border border-slate-200 rounded-[3px] p-3 text-xs font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-[#1952E1]" placeholder="Detail your experience with this specialist..."></textarea>
                 </div>
 
                 <!-- Submit buttons -->
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-                    <a href="services.php" class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-[3px] transition-colors">
+                    <a href="my-projects.php" class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-[3px] transition-colors">
                         Cancel
                     </a>
-                    <button type="submit" class="px-4 py-2 text-xs font-bold bg-[#1952E1] hover:bg-blue-700 text-white rounded-[3px] transition-colors shadow-sm">
+                    <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-[#1952E1] hover:bg-blue-700 text-white rounded-[3px] transition-colors shadow-sm cursor-pointer">
                         Submit Review
                     </button>
                 </div>
@@ -105,6 +138,3 @@ require_once __DIR__ . '/components/head.php';
 </main>
 
 <?php include __DIR__ . '/components/footer.php'; ?>
-
-
-
