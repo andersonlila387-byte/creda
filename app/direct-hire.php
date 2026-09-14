@@ -24,7 +24,14 @@ if (!$provider_id) {
 }
 
 // Fetch Provider Info
-$sql = "SELECT u.id, u.full_name, tp.title FROM users u LEFT JOIN talent_profiles tp ON u.id = tp.user_id WHERE u.id = ? LIMIT 1";
+$sql = "
+    SELECT u.id, u.full_name, u.username, u.email, u.created_at as joined_date,
+           tp.title, tp.hourly_rate, tp.rating, tp.rating_count, tp.job_success_percentage, 
+           tp.location, tp.avatar_url, tp.bio, tp.skills, tp.turnaround_time
+    FROM users u 
+    LEFT JOIN talent_profiles tp ON u.id = tp.user_id 
+    WHERE u.id = ? LIMIT 1
+";
 $stmt = $db->prepare($sql);
 $stmt->execute([$provider_id]);
 $provider = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -33,10 +40,22 @@ if (!$provider) {
     die("Invalid provider.");
 }
 
-// Handle Direct Booking Submission (Mock Payment)
+// Default fallbacks
+$provider_name = htmlspecialchars($provider['full_name'] ?? 'Specialist');
+$provider_title = htmlspecialchars($provider['title'] ?? 'Verified Specialist');
+$provider_location = htmlspecialchars($provider['location'] ?? 'Remote');
+$provider_rating = number_format((float)($provider['rating'] ?? 5.0), 1);
+$provider_rating_count = (int)($provider['rating_count'] ?? 0);
+$provider_jss = (int)($provider['job_success_percentage'] ?? 100);
+$provider_hourly = (float)($provider['hourly_rate'] ?? 0);
+$avatar_url = !empty($provider['avatar_url']) ? $provider['avatar_url'] : "https://ui-avatars.com/api/?name=" . urlencode($provider['full_name']) . "&background=1952E1&color=ffffff&bold=true";
+
+// Handle Direct Booking Submission
+$error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_title = trim($_POST['title'] ?? '');
     $budget = floatval($_POST['budget'] ?? 0);
+    $deadline_days = intval($_POST['deadline_days'] ?? 7);
     $description = trim($_POST['description'] ?? '');
     
     if (empty($project_title) || $budget <= 0) {
@@ -49,8 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->beginTransaction();
             
             // 1. Create Contract
-            $stmt_c = $db->prepare("INSERT INTO contracts (client_id, provider_id, package_id, title, total_amount, status, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, 'active', NOW(), NOW())");
-            $stmt_c->execute([$client_id, $provider_id, $project_title, $total]);
+            $deadline_at = date('Y-m-d H:i:s', strtotime("+{$deadline_days} days"));
+            $stmt_c = $db->prepare("INSERT INTO contracts (client_id, provider_id, package_id, title, total_amount, status, deadline_at, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, 'active', ?, NOW(), NOW())");
+            $stmt_c->execute([$client_id, $provider_id, $project_title, $total, $deadline_at]);
             $contract_id = $db->lastInsertId();
 
             // 2. Create Escrow Transaction (Mock Funded)
@@ -60,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 3. Save requirements as first message
             if (!empty($description)) {
                 $stmt_m = $db->prepare("INSERT INTO messages (contract_id, sender_id, receiver_id, content) VALUES (?, ?, ?, ?)");
-                $stmt_m->execute([$contract_id, $client_id, $provider_id, "Project Description/Requirements: " . $description]);
+                $stmt_m->execute([$contract_id, $client_id, $provider_id, "Project Scope & Requirements:\n\n" . $description]);
             }
             
             $db->commit();
@@ -77,125 +97,294 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$page_title = 'Direct Hire';
+$page_title = 'Direct Hire Offer';
 $active_tab = 'talent';
+require_once __DIR__ . '/components/head.php'; 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <?php include __DIR__ . '/components/head.php'; ?>
-    <title>Direct Hire - Scriptly</title>
-</head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col md:flex-row">
 
-    <?php include __DIR__ . '/components/sidebar.php'; ?>
-    <?php include __DIR__ . '/components/bottom-nav.php'; ?>
+<?php include __DIR__ . '/components/sidebar.php'; ?>
 
-    <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
-        <?php include __DIR__ . '/components/header.php'; ?>
+<!-- Main Layout Area -->
+<main class="flex-1 flex flex-col h-full w-full min-w-0 overflow-hidden relative bg-[#EFF2F7]">
+    
+    <?php include __DIR__ . '/components/header.php'; ?>
 
-        <div class="p-4 md:p-8 pt-20 max-w-4xl mx-auto w-full mobile-bottom-space md:pt-8 md:pb-8">
-            <h1 class="text-2xl font-black text-slate-900 mb-6">Direct Hire Offer</h1>
-            
-            <?php if (isset($error)): ?>
-                <div class="bg-red-50 text-red-600 p-4 rounded-[3px] border border-red-200 mb-6 text-sm font-bold">
-                    <?php echo htmlspecialchars($error); ?>
+    <!-- Scrollable Content Area -->
+    <div class="flex-1 overflow-y-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 mobile-bottom-space md:pb-6 lg:pb-12 scroll-smooth">
+        
+        <div class="max-w-6xl mx-auto space-y-6">
+
+            <!-- Top Navigation & Protection Badge -->
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+                <a href="provider-profile.php?id=<?= $provider_id ?>" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-[3px] text-xs font-semibold text-slate-700 hover:text-[#1952E1] transition-colors shadow-2xs">
+                    <i class="ph-bold ph-arrow-left"></i>
+                    <span>Back to Profile</span>
+                </a>
+                <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-[3px]">
+                    <i class="ph-fill ph-shield-check text-xs"></i>
+                    <span>100% Escrow Protected Booking</span>
+                </span>
+            </div>
+
+            <!-- Page Header Card -->
+            <div class="bg-white p-5 sm:p-6 rounded-[3px] border border-slate-200/90 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Direct Hire Contract</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-xs font-semibold text-[#1952E1]">Custom Booking</span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                        Send Direct Offer to <?= $provider_name ?>
+                    </h1>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Define your deliverables and budget. Funds are held safely in Scriptly Escrow until you approve the final delivery.
+                    </p>
+                </div>
+            </div>
+
+            <?php if (!empty($error)): ?>
+                <div class="p-4 bg-rose-50 border border-rose-200 rounded-[3px] text-xs font-bold text-rose-800 flex items-center gap-2 shadow-xs">
+                    <i class="ph-fill ph-warning-circle text-rose-600 text-sm shrink-0"></i>
+                    <span><?= htmlspecialchars($error) ?></span>
                 </div>
             <?php endif; ?>
 
-            <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Left: Booking Form -->
-                <div class="flex-1 bg-white border border-slate-200 rounded-[3px] p-6 shadow-sm">
-                    <h2 class="text-sm font-extrabold text-slate-900 border-b border-slate-100 pb-3 uppercase tracking-wider mb-6">Project Details</h2>
+            <!-- 2-COLUMN BOOKING GRID -->
+            <form method="POST" id="direct-hire-form" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- LEFT COLUMN: Contract Specification Form (7 Cols) -->
+                <div class="lg:col-span-7 space-y-6">
                     
-                    <form method="POST" id="checkout-form" class="space-y-4">
+                    <div class="bg-white rounded-[3px] border border-slate-200/90 p-5 sm:p-7 shadow-sm space-y-5">
                         
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Project Title</label>
-                            <input type="text" name="title" required placeholder="e.g. Develop custom API integration" class="w-full border border-slate-300 rounded-[3px] px-3 py-2 text-sm focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] outline-none">
+                        <div class="border-b border-slate-100 pb-3">
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Project Deliverables & Terms</h2>
+                            <p class="text-xs text-slate-400 mt-0.5">Specify clear requirements to ensure smooth collaboration</p>
                         </div>
 
+                        <!-- 1. Contract Title -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Project Description & Requirements</label>
-                            <textarea name="description" rows="4" placeholder="Describe the deliverables, timeline, and any specific requirements..." class="w-full border border-slate-300 rounded-[3px] px-3 py-2 text-sm focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] outline-none"></textarea>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Total Budget (₦)</label>
-                            <input type="number" name="budget" id="budget-input" required min="1000" step="1000" placeholder="50000" class="w-full border border-slate-300 rounded-[3px] px-3 py-2 text-sm focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] outline-none">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                                Contract Title <span class="text-rose-500">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="title" 
+                                required 
+                                placeholder="e.g. Build Custom React Native Mobile Screen Flow" 
+                                class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] transition-all"
+                            >
                         </div>
 
-                        <div class="bg-blue-50/50 border border-blue-200 rounded-[3px] p-4 flex items-start gap-4 mt-6 mb-6">
-                            <div class="w-10 h-10 bg-white border border-blue-200 rounded-full flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5 text-[#1952E1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                            </div>
+                        <!-- 2. Scope & Instructions -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                                Detailed Scope & Requirements <span class="text-rose-500">*</span>
+                            </label>
+                            <textarea 
+                                name="description" 
+                                rows="6" 
+                                required
+                                placeholder="Describe the project objectives, required deliverables, technology stack, assets provided, and any specific expectations..." 
+                                class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] p-3.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] transition-all"
+                            ></textarea>
+                            <p class="text-[11px] text-slate-400 mt-1">
+                                This will be recorded on the official contract agreement and sent directly to the specialist.
+                            </p>
+                        </div>
+
+                        <!-- 3. Budget & Delivery Timeframe Row -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                             <div>
-                                <h3 class="text-sm font-bold text-slate-900">Paystack Secure Gateway</h3>
-                                <p class="text-xs text-slate-500 mt-1">Your funds will be held securely in Scriptly Escrow until you approve the provider's final delivery.</p>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                                    Agreed Project Budget (₦) <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">₦</span>
+                                    <input 
+                                        type="number" 
+                                        name="budget" 
+                                        id="budget-input" 
+                                        required 
+                                        min="1000" 
+                                        step="500" 
+                                        placeholder="50000" 
+                                        class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] pl-8 pr-3.5 py-2.5 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#1952E1] focus:ring-1 focus:ring-[#1952E1] transition-all"
+                                    >
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1">Minimum budget is ₦1,000</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                                    Target Delivery Timeframe
+                                </label>
+                                <select 
+                                    name="deadline_days" 
+                                    class="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-[3px] px-3.5 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:border-[#1952E1] transition-all"
+                                >
+                                    <option value="3">3 Days (Fast delivery)</option>
+                                    <option value="7" selected>7 Days (Standard turnaround)</option>
+                                    <option value="14">14 Days (2 Weeks)</option>
+                                    <option value="21">21 Days (3 Weeks)</option>
+                                    <option value="30">30 Days (1 Month)</option>
+                                </select>
+                                <p class="text-[11px] text-slate-400 mt-1">Can be extended mutually if needed</p>
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full py-4 bg-[#1952E1] hover:bg-blue-700 text-white font-black text-sm rounded-[3px] transition-colors shadow-sm">
-                            Fund Escrow & Send Contract
-                        </button>
-                    </form>
+                    </div>
+
+                    <!-- Escrow Protection Guarantee Bento -->
+                    <div class="bg-blue-50/60 border border-blue-200/80 rounded-[3px] p-4 sm:p-5 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-[3px] bg-blue-100/80 text-[#1952E1] flex items-center justify-center shrink-0">
+                            <i class="ph-bold ph-shield-check text-xl"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-xs font-bold text-slate-900">How Scriptly Escrow Protects You</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Your payment is securely placed into escrow upfront. The specialist starts work immediately, but funds are only released to their wallet when you review and confirm the completed project.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- Right: Provider Summary -->
-                <div class="w-full lg:w-80 shrink-0">
-                    <div class="bg-white border border-slate-200 rounded-[3px] shadow-sm overflow-hidden sticky top-6">
-                        <div class="bg-slate-50 border-b border-slate-200 p-4">
-                            <h2 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Hiring Professional</h2>
+                <!-- RIGHT COLUMN: Provider Card & Order Summary (5 Cols) -->
+                <div class="lg:col-span-5 space-y-5 lg:sticky lg:top-4">
+                    
+                    <!-- Selected Specialist Card -->
+                    <div class="bg-white rounded-[3px] border border-slate-200/90 shadow-sm overflow-hidden">
+                        <div class="bg-slate-50/70 border-b border-slate-100 px-5 py-3.5 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Hiring Professional</span>
+                            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-[2px] border border-emerald-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Available
+                            </span>
                         </div>
-                        <div class="p-4 text-center">
-                            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200 text-lg font-black text-slate-700">
-                                <?= substr($provider['full_name'], 0, 1) ?>
+
+                        <div class="p-5 space-y-4">
+                            <div class="flex items-start gap-4">
+                                <img 
+                                    src="<?= $avatar_url ?>" 
+                                    alt="<?= $provider_name ?>" 
+                                    class="w-14 h-14 rounded-full object-cover border border-slate-200 shrink-0 bg-slate-100"
+                                >
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-1.5">
+                                        <h3 class="font-bold text-base text-slate-900 truncate"><?= $provider_name ?></h3>
+                                        <i class="ph-fill ph-seal-check text-[#1952E1] text-sm shrink-0" title="Verified Pro"></i>
+                                    </div>
+                                    <p class="text-xs font-semibold text-slate-600 truncate mt-0.5"><?= $provider_title ?></p>
+                                    <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-1">
+                                        <i class="ph-bold ph-map-pin text-slate-400"></i>
+                                        <span><?= $provider_location ?></span>
+                                    </p>
+                                </div>
                             </div>
-                            <h3 class="text-sm font-bold text-slate-900 leading-snug"><?php echo htmlspecialchars($provider['full_name']); ?></h3>
-                            <p class="text-[11px] text-slate-500 mt-1 font-semibold"><?php echo htmlspecialchars($provider['title']); ?></p>
-                        </div>
-                        
-                        <div class="border-t border-slate-100 pt-4 p-4 space-y-2 text-sm bg-slate-50">
-                            <div class="flex justify-between text-slate-600">
-                                <span>Subtotal</span>
-                                <span id="summary-subtotal">₦0.00</span>
-                            </div>
-                            <div class="flex justify-between text-slate-600">
-                                <span>Escrow Fee (5%)</span>
-                                <span id="summary-fee">₦0.00</span>
-                            </div>
-                        </div>
-                        <div class="bg-slate-100 border-t border-slate-200 p-4">
-                            <div class="flex justify-between items-center">
-                                <span class="font-extrabold text-slate-900 text-sm">Total</span>
-                                <span class="font-black text-slate-900 text-lg" id="summary-total">₦0.00</span>
+
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                                <div class="bg-slate-50 p-2.5 rounded-[2px] text-center border border-slate-100">
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Rating</div>
+                                    <div class="text-xs font-black text-slate-800 flex items-center justify-center gap-1 mt-0.5">
+                                        <i class="ph-fill ph-star text-amber-500"></i>
+                                        <span><?= $provider_rating ?></span>
+                                        <span class="text-slate-400 font-normal text-[10px]">(<?= $provider_rating_count ?>)</span>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 p-2.5 rounded-[2px] text-center border border-slate-100">
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Job Success</div>
+                                    <div class="text-xs font-black text-emerald-700 flex items-center justify-center gap-1 mt-0.5">
+                                        <i class="ph-bold ph-chart-line-up"></i>
+                                        <span><?= $provider_jss ?>%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Escrow Deposit Summary Card -->
+                    <div class="bg-white rounded-[3px] border border-slate-200/90 shadow-sm overflow-hidden">
+                        <div class="bg-slate-50/70 border-b border-slate-100 px-5 py-3.5">
+                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Escrow Summary</h3>
+                        </div>
+
+                        <div class="p-5 space-y-3.5">
+                            
+                            <div class="flex items-center justify-between text-xs font-medium text-slate-600">
+                                <span>Agreed Project Subtotal</span>
+                                <span class="font-bold text-slate-900" id="summary-subtotal">₦0.00</span>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs font-medium text-slate-600">
+                                <span class="flex items-center gap-1" title="Covers payment gateway charges and 24/7 dispute protection">
+                                    <span>Escrow Protection Fee (5%)</span>
+                                    <i class="ph-bold ph-info text-slate-400 text-xs"></i>
+                                </span>
+                                <span class="font-bold text-slate-900" id="summary-fee">₦0.00</span>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs font-black text-slate-900">Total Escrow Deposit</div>
+                                    <div class="text-[10px] text-slate-400">Held securely until milestone signoff</div>
+                                </div>
+                                <div class="text-xl font-black text-[#1952E1]" id="summary-total">₦0.00</div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button 
+                                type="submit" 
+                                class="w-full mt-4 py-3.5 bg-[#1952E1] hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-sm rounded-[3px] transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                            >
+                                <i class="ph-bold ph-lock-key"></i>
+                                <span>Fund Escrow & Send Offer</span>
+                            </button>
+
+                            <div class="pt-3 border-t border-slate-100 space-y-2 text-[11px] text-slate-500">
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-bold ph-check-circle text-emerald-600"></i>
+                                    <span>Instant full refund if specialist declines</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-bold ph-shield-check text-blue-600"></i>
+                                    <span>256-bit encrypted Paystack escrow payment</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+
+            </form>
+
         </div>
-        
-        <?php include __DIR__ . '/components/footer.php'; ?>
-    </main>
 
-    <script>
-        const budgetInput = document.getElementById('budget-input');
-        const subtotalEl = document.getElementById('summary-subtotal');
-        const feeEl = document.getElementById('summary-fee');
-        const totalEl = document.getElementById('summary-total');
+    </div>
 
-        if (budgetInput) {
-            budgetInput.addEventListener('input', function() {
-                const val = parseFloat(this.value) || 0;
-                const fee = val * 0.05;
-                const total = val + fee;
+</main>
 
-                subtotalEl.innerText = '₦' + val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                feeEl.innerText = '₦' + fee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                totalEl.innerText = '₦' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            });
-        }
-    </script>
-</body>
-</html>
+<?php include __DIR__ . '/components/footer.php'; ?>
+
+<script>
+    const budgetInput = document.getElementById('budget-input');
+    const subtotalEl = document.getElementById('summary-subtotal');
+    const feeEl = document.getElementById('summary-fee');
+    const totalEl = document.getElementById('summary-total');
+
+    function updateCalculations() {
+        const val = parseFloat(budgetInput.value) || 0;
+        const fee = val * 0.05;
+        const total = val + fee;
+
+        subtotalEl.innerText = '₦' + val.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        feeEl.innerText = '₦' + fee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        totalEl.innerText = '₦' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    if (budgetInput) {
+        budgetInput.addEventListener('input', updateCalculations);
+        updateCalculations();
+    }
+</script>
