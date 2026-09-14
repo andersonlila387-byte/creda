@@ -152,11 +152,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Resolve recipient slug
+// Resolve recipient slug or id
 $receiver_slug = $_GET['user'] ?? null;
 $recipient = null;
 if ($receiver_slug) {
-    $r_stmt = $db->prepare("SELECT id, full_name, username, primary_role FROM users WHERE username = ?");
+    if (is_numeric($receiver_slug)) {
+        $r_stmt = $db->prepare("SELECT id, full_name, username, primary_role FROM users WHERE id = ?");
+    } else {
+        $r_stmt = $db->prepare("SELECT id, full_name, username, primary_role FROM users WHERE username = ?");
+    }
     $r_stmt->execute([$receiver_slug]);
     $recipient = $r_stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -332,7 +336,7 @@ require_once __DIR__ . '/components/head.php';
                         $avatar_url = "https://ui-avatars.com/api/?name=" . urlencode($conv['full_name']) . "&background=f1f5f9&color=0f172a&bold=true";
                         $unread = (int)$conv['unread_count'];
                     ?>
-                    <a href="/creda/app/messages/user/<?= htmlspecialchars($conv['username'] ?: $conv['id']) ?>" 
+                    <a href="messages.php?user=<?= htmlspecialchars($conv['username'] ?: $conv['id']) ?>" 
                        class="conv-item block p-3.5 sm:p-4 hover:bg-slate-50 transition-colors cursor-pointer <?= $isActive ? 'active bg-blue-50/40 border-l-4 border-l-[#1952E1]' : 'border-l-4 border-l-transparent' ?>" 
                        data-user-id="<?= $conv['id'] ?>"
                        data-username="<?= htmlspecialchars($conv['username'] ?: $conv['id']) ?>">
