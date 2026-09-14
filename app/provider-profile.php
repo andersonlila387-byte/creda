@@ -233,7 +233,7 @@ require_once __DIR__ . '/components/head.php';
 
                             <!-- Primary Hire Button -->
                             <a 
-                                href="post-project.php?provider_id=<?= $provider['user_id'] ?>" 
+                                href="direct-hire.php?provider_id=<?= $provider['user_id'] ?>" 
                                 class="col-span-2 sm:col-span-1 inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-black rounded-[3px] transition-all shadow-md shadow-blue-600/20 group"
                             >
                                 <i class="ph-bold ph-handshake text-sm group-hover:scale-110 transition-transform"></i>
@@ -445,7 +445,7 @@ require_once __DIR__ . '/components/head.php';
                                     </p>
                                 </div>
                                 <div class="pt-2">
-                                    <a href="post-project.php?provider_id=<?= $provider['user_id'] ?>" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-bold rounded-[3px] transition-colors shadow-2xs">
+                                    <a href="direct-hire.php?provider_id=<?= $provider['user_id'] ?>" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1952E1] hover:bg-blue-700 text-white text-xs font-bold rounded-[3px] transition-colors shadow-2xs">
                                         <i class="ph-bold ph-plus-circle text-sm"></i>
                                         <span>Propose Project to <?= $first_name ?></span>
                                     </a>
@@ -668,7 +668,7 @@ require_once __DIR__ . '/components/head.php';
                         <!-- Direct CTAs -->
                         <div class="space-y-2 pt-1">
                             <a 
-                                href="post-project.php?provider_id=<?= $provider['user_id'] ?>" 
+                                href="direct-hire.php?provider_id=<?= $provider['user_id'] ?>" 
                                 class="w-full py-3 bg-[#1952E1] hover:bg-blue-700 text-white font-bold text-xs rounded-[3px] transition-all shadow-md shadow-blue-600/20 flex items-center justify-center gap-2 group"
                             >
                                 <i class="ph-bold ph-paper-plane-tilt text-sm group-hover:translate-x-0.5 transition-transform"></i>
